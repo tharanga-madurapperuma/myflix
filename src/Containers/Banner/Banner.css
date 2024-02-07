@@ -1,0 +1,57 @@
+.banner__background {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 0;
+}
+
+.banner__leftGradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, rgba(7, 9, 18, 0.7) 0%, rgba(7, 9, 18, 0) 100%);
+    z-index: 1;
+}
+
+.banner__topGradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(180deg, rgba(7, 9, 18, 0.7) 0%, rgba(7, 9, 18, 0) 50%);
+    z-index: 1;
+}
+
+.banner__bottomGradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(0deg, rgba(7, 9, 18, 1) 0%, rgba(7, 9, 18, 0) 50%);
+    z-index: 1;
+}
+
+.banner__content {
+    position: absolute;
+    left: 15%;
+    top: 30%;
+    height: 20%;
+    width: 40%;
+    color: var(--color-white);
+    z-index: 3;
+}
+
+.banner__content h2 {
+    font-weight: 700;
+    font-size: 3.2rem;
+}
+
+.banner__content h3 {
+    font-weight: 600;
+    font-size: 2rem;
+}
