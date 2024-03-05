@@ -23,7 +23,7 @@
     font-weight: 400;
     font-size: 1.3rem;
     margin: 0 30px;
-    transition: transform 1s;
+    transition-duration: 0.5s;
 }
 
 .navBar ul li:hover {
