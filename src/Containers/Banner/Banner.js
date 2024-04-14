@@ -27,6 +27,7 @@ const Banner = () => {
 
     //console.log(movie);
     console.log(uniqueMovie);
+    console.log(uniqueMovie.genres);
     
 
   return (
@@ -48,6 +49,7 @@ const Banner = () => {
       <div className='banner__content'>
         <h4>Duration: {uniqueMovie.runtime} min</h4>
         <h3>{movie?.vote_average}</h3>
+        {/* <h5>{uniqueMovie.genres[0].name} | {uniqueMovie.genres[1].name}</h5> */}
         <h2>{movie?.title}</h2>
         <p>{movie?.overview}</p>
         

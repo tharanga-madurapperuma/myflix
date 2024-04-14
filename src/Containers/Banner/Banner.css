@@ -49,11 +49,18 @@
 .banner__content h2 {
     font-weight: 700;
     font-size: 3.2rem;
+    margin-top: 2rem;
 }
 
 .banner__content h3 {
     font-weight: 600;
     font-size: 2rem;
+    margin-top: 2rem;
+}
+
+.banner__content h5 {
+    font-weight: 400;
+    font-size: 1.1rem;
 }
 
 .icon {
@@ -63,6 +70,7 @@
 .banner__content-buttons{
     display: flex;
     flex-direction: row;
+    margin-top: 2rem;
 }
 
 .buttons {

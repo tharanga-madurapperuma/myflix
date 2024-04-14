@@ -3,3 +3,15 @@
     width: 100%;
     background-color: var(--color-background);
 }
+
+.varietyBar__varations{
+    width: 100%;
+    display: fle;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5rem;
+}
+
+.varietyBar__varations li{
+    color: #ffffff;
+}
