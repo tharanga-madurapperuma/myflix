@@ -2,10 +2,10 @@
 
 :root {
   --font-base: 'Lato', serif;
-
   --color-netflixRed: #e50914;
   --color-background: rgb(7, 9, 18);
   --color-white: #ffffff;
+  --color-gray: #a5a5a5;
 }
 
 *{
