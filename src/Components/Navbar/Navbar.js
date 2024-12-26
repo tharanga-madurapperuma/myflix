@@ -1,9 +1,12 @@
 import React from "react";
 import "./Navbar.css";
 import { FaUserCircle } from "react-icons/fa";
+import { use } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = ({ name }) => {
-    console.log(name);
+    const navigate = useNavigate();
+
     return (
         <div className="navBar">
             <div className="navBar-container">
@@ -12,7 +15,13 @@ const Navbar = ({ name }) => {
                 </div>
                 <ul>
                     <li href="#">Home</li>
-                    <li href="#">Movies</li>
+                    <li
+                        onClick={() => {
+                            navigate("./movies");
+                        }}
+                    >
+                        Movies
+                    </li>
                     <li href="#">TV Shows</li>
                 </ul>
                 <div className="navBar__user">
