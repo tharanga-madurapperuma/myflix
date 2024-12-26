@@ -23,13 +23,13 @@ const requests = {
 };
 
 const action = {
-    url: `/discover/movie?api_key=${api_key}&with_genres=27`,
+    url: `${BASE_URL}/discover/movie?api_key=${api_key}&with_genres=27`,
     genreID: 27,
     name: "Action",
 };
 
 const requestUniqueMovie = (id) => {
-    return `/movie/${id}?api_key=${api_key}&append_to_response=videos`;
+    return `${BASE_URL}/movie/${id}?api_key=${api_key}&append_to_response=videos`;
 };
 
 export { requests, requestUniqueMovie };
