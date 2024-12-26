@@ -20,7 +20,7 @@
 .swiper {
     width: 100%;
     padding-top: 5.5% !important;
-    padding-bottom: 50px;
+    padding-bottom: 100px !important;
 }
 
 .swiper-slide {
@@ -33,4 +33,15 @@
 .swiper-slide img {
     display: block;
     width: 100%;
+}
+
+.swiper-pagination {
+    bottom: 25px !important;
+    z-index: 10; /* Adjust this value as needed to move the dots further down */
+}
+
+.swiper-pagination-bullet {
+    background-color: var(
+        --color-light
+    ) !important; /* Set the desired color for the dots */
 }
