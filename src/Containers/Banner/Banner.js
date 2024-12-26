@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./Banner.css";
 import { requests, requestUniqueMovie } from "../requests";
-import axios from "../axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPlus } from "@fortawesome/free-solid-svg-icons";
+import axios from "axios";
 
 const Banner = () => {
     const [movie, setMovie] = useState("");
@@ -24,9 +24,6 @@ const Banner = () => {
         }
         fetchData();
     }, []);
-
-    //console.log(movie);
-    console.log(uniqueMovie);
 
     return (
         <div className="banner__wrapper">
