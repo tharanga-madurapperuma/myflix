@@ -1,33 +1,53 @@
 .navBar {
-    height: 130px;
+    height: 80px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    background-color: var(--color-background-navbar);
+}
+
+.navBar-container {
     width: 90%;
+    height: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 2;
 }
 
-.navBar__image{
-    height: 34.98px;
-    width: 100px;
+.navBar__logo h1 {
+    color: var(--color-light);
+    font-weight: 700;
+    font-family: "Roboto", sans-serif;
 }
 
-.navBar__image img {
-    width: 100%;
-    height: 100%;
-}
-
-.navBar ul li{
+.navBar-container ul li {
     display: inline-block;
-    color: var(--color-white);
+    color: var(--color-text-normal);
     font-weight: 400;
-    font-size: 1.3rem;
+    font-size: 1rem;
     margin: 0 30px;
     transition-duration: 0.5s;
 }
 
-.navBar ul li:hover {
-    color: var(--color-netflixRed);
-    text-shadow: 0 0 5px var(--color-netflixRed);
+.navBar-container ul li:hover {
+    color: var(--color-light);
     border: none;
+    cursor: pointer;
+}
+
+.navBar__user {
+    color: var(--color-text-normal);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.navBar__user p {
+    margin-left: 10px;
+}
+
+.user-icon {
+    font-size: 1.5rem;
 }

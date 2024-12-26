@@ -1,4 +1,4 @@
-const api_key = '402ab982f69b1e475e37d7f951d28493';
+const api_key = "402ab982f69b1e475e37d7f951d28493";
 
 // Get genres, returns ID of genre
 //https://api.themoviedb.org/3/genre/movie/list?api_key=${api_key}
@@ -14,8 +14,6 @@ const api_key = '402ab982f69b1e475e37d7f951d28493';
 
 //Upcoming
 //https://api.themoviedb.org/3/movie/upcoming?api_key=${api_key}
-
-
 
 const requests = {
     fetchAction: `/discover/movie?api_key=${api_key}&with_genres=27`,
@@ -36,12 +34,16 @@ const requests = {
     fetchTVMovie: `/discover/movie?api_key=${api_key}&with_genres=10770`,
     fetchWar: `/discover/movie?api_key=${api_key}&with_genres=10752`,
     fetchWestern: `/discover/movie?api_key=${api_key}&with_genres=37`,
-}
+};
 
 const action = {
-    url:`/discover/movie?api_key=${api_key}&with_genres=27`,
+    url: `/discover/movie?api_key=${api_key}&with_genres=27`,
     genreID: 27,
-    name: "Action"
-}
+    name: "Action",
+};
 
-export default requests;
+const requestUniqueMovie = (id) => {
+    return `/movie/${id}?api_key=${api_key}&append_to_response=videos`;
+};
+
+export { requests, requestUniqueMovie };

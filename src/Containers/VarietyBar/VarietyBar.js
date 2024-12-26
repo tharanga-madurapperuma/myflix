@@ -2,6 +2,7 @@ import React from 'react'
 import './VarietyBar.css';
 
 const clickChange = document.querySelectorAll('.click-change');
+//const redBar = document.querySelectorAll('')
 
 clickChange.forEach((colorChange) => {
   colorChange.addEventListener('click', () => {
@@ -16,7 +17,7 @@ const VarietyBar = () => {
       <div className='varietyBar__outer'>
         <div className='varietyBar__varations'>
           <div>
-            <h6 className='click-change'>Movies</h6>
+            <h6 className='click-change after-clicked'>Movies</h6>
             <div className='div-redBar varietyBar__redBar'></div>
           </div>
           <div>
