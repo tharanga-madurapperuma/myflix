@@ -35,7 +35,7 @@ const Movies = () => {
                     coverflowEffect={{
                         rotate: 0,
                         stretch: 0,
-                        depth: 150,
+                        depth: 200,
                         modifier: 2.5,
                         slideShadows: true,
                     }}
