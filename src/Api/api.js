@@ -1,4 +1,4 @@
-// src/api.js
+
 import axios from 'axios';
 
 const API_BASE_URL = "http://localhost:5000/api";
@@ -36,3 +36,26 @@ export const handleAuthenticationSuccess = (mode, token, navigate) => {
     navigate("/"); // Redirect to home after login
   }
 };
+
+
+//Function to Edit user
+
+export const editUser = async (email, firstName, lastName, password) => {
+  const endpoint = `${API_BASE_URL}/auth/edit`; // Use userId to identify which user to edit
+
+
+  const payload = {
+    email,
+    firstName,
+    lastName,
+    ...(password && { password }) // Include password only if it is provided
+  };
+  console.log(payload);
+  try {
+    const response = await axios.post(endpoint, payload); // Use PUT for updates
+    return response.data;
+  } catch (error) {
+    throw error; // Propagate the error to be handled in the calling function
+  }
+};
+

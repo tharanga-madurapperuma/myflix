@@ -24,4 +24,53 @@ const findUserByEmail = async (email) => {
   }
 };
 
-module.exports = { registerUser, findUserByEmail };
+
+const editUserByEmail = async (email, updates) => {
+  try {
+    const { firstName, lastName, password, role="user" } = updates;
+
+    // Build dynamic query based on provided fields
+    const fields = [];
+    const values = [];
+    let index = 1;
+
+    if (firstName) {
+      fields.push(`first_name = $${index++}`);
+      values.push(firstName);
+    }
+    if (lastName) {
+      fields.push(`last_name = $${index++}`);
+      values.push(lastName);
+    }
+    if (password) {
+      fields.push(`password = $${index++}`);
+      values.push(password);
+    }
+    if (role) {
+      fields.push(`role = $${index++}`);
+      values.push(role);
+    }
+
+    if (fields.length === 0) {
+      throw new Error("No updates provided");
+    }
+
+    values.push(email); // Add `email` as the last value for WHERE clause
+
+    const query = `
+      UPDATE usermovie
+      SET ${fields.join(", ")}
+      WHERE email = $${index}
+      RETURNING *;
+    `;
+
+    const result = await pool.query(query, values);
+    return result.rows[0];
+  } catch (err) {
+    console.error("Error editing user by email:", err);
+    throw new Error("Error editing user");
+  }
+};
+
+
+module.exports = { registerUser, findUserByEmail,editUserByEmail };

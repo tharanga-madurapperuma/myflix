@@ -1,5 +1,5 @@
 const { hashPassword, comparePassword, generateToken } = require("../Utils/authUtils");
-const { registerUser, findUserByEmail } = require("../Model/userModel");
+const { registerUser, findUserByEmail,editUserByEmail } = require("../Model/userModel");
 
 const registerUserController = async (req, res) => {
   const { firstName, lastName, email, password, role } = req.body;
@@ -49,4 +49,36 @@ const loginUserController = async (req, res) => {
   }
 };
 
-module.exports = { registerUserController, loginUserController };
+//Edit user details
+const editUserController = async (req, res) => {
+  const { email } = req.body; // Assuming `email` is part of the request body
+  const updates = req.body; // Contains fields to update
+
+  try {
+    if (!email) {
+      return res.status(400).json({ error: "Email is required" });
+    }
+
+    // Check if user exists by email
+    const user = await findUserByEmail(email);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Hash password if it's part of updates
+    if (updates.password) {
+      updates.password = await hashPassword(updates.password);
+    }
+
+    const updatedUser = await editUserByEmail(email, updates);
+    res.status(200).json({ message: "User updated successfully", user: updatedUser });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error updating user" });
+  }
+};
+
+
+
+
+module.exports = { registerUserController, loginUserController, editUserController};
