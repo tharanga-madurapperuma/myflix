@@ -3,6 +3,7 @@ import "./Home.css";
 import Banner from "../Banner/Banner";
 import Navbar from "../../Components/Navbar/Navbar";
 import Movies from "../Movies/Movies";
+import Footer from "../Footer/Footer";
 
 const Home = () => {
     const [loggedUser, setLoggedUser] = useState(null);
@@ -25,6 +26,7 @@ const Home = () => {
             </div>
             <div className="home__secondSection">
                 <Movies />
+                <Footer />
             </div>
         </div>
     );
