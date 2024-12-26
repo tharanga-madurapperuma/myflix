@@ -29,7 +29,7 @@ const Banner = () => {
     console.log(uniqueMovie);
 
     return (
-        <>
+        <div className="banner__wrapper">
             <div
                 className="banner__background"
                 style={{
@@ -46,9 +46,13 @@ const Banner = () => {
             <div className="banner__bottomGradient" />
 
             <div className="banner__content">
-                <h4>Duration: {uniqueMovie.runtime} min</h4>
                 <h3>{movie?.vote_average}</h3>
-                {/* <h5>{uniqueMovie.genres[0].name} | {uniqueMovie.genres[1].name}</h5> */}
+                <h4>Duration: {uniqueMovie.runtime} min</h4>
+                <h5>
+                    {uniqueMovie.genres?.map((genre) => (
+                        <span> | {genre.name}</span>
+                    ))}
+                </h5>
                 <h2>{movie?.title}</h2>
                 <p>{movie?.overview}</p>
 
@@ -63,7 +67,7 @@ const Banner = () => {
                     </button>
                 </div>
             </div>
-        </>
+        </div>
     );
 };
 
