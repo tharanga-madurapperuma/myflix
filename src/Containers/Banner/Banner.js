@@ -11,7 +11,7 @@ const Banner = () => {
 
     useEffect(() => {
         async function fetchData() {
-            const request = await axios.get(requests.fetchAdventure);
+            const request = await axios.get(requests.Adventure);
             const fetchedMovie =
                 request.data.results[
                     Math.floor(Math.random() * request.data.results.length - 1)
