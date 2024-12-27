@@ -4,25 +4,18 @@ const BASE_URL = "https://api.themoviedb.org/3";
 const requests = {
     Adventure: `${BASE_URL}/discover/movie?api_key=${api_key}&with_genres=12`,
 
-    NowPlaying: `${BASE_URL}/movie/now_playing?api_key=${api_key}&language=en-US`,
-    TopRated: `${BASE_URL}/movie/top_rated?api_key=${api_key}&language=en-US`,
-    Popular: `${BASE_URL}/movie/popular?api_key=${api_key}&language=en-US`,
-    UpComing: `${BASE_URL}/movie/upcoming?api_key=${api_key}&language=en-US`,
+    NowPlaying: `${BASE_URL}/movie/now_playing?api_key=${api_key}&language=en-US&page=1`,
+    TopRated: `${BASE_URL}/movie/top_rated?api_key=${api_key}&language=en-US&page=1`,
+    Popular: `${BASE_URL}/movie/popular?api_key=${api_key}&language=en-US&page=1`,
+    UpComing: `${BASE_URL}/movie/upcoming?api_key=${api_key}&language=en-US&page=1`,
 
-    // fetchAdventure: `${BASE_URL}/discover/movie?api_key=${api_key}&with_genres=12`,
-    // fetchAnimation: `${BASE_URL}/discover/movie?api_key=${api_key}&with_genres=16`,
-    // fetchComedy: `${BASE_URL}/discover/movie?api_key=${api_key}&with_genres=35`,
-    // fetchCrime: `${BASE_URL}/discover/movie?api_key=${api_key}&with_genres=80`,
-    // fetchDocumentary: `${BASE_URL}/discover/movie?api_key=${api_key}&with_genres=99`,
-    // fetchDrama: `${BASE_URL}/discover/movie?api_key=${api_key}&with_genres=18`,
-    // fetchFamily: `${BASE_URL}/discover/movie?api_key=${api_key}&with_genres=10751`,
-    // fetchHorror: `${BASE_URL}/discover/movie?api_key=${api_key}&with_genres=27`,
-    // fetchRomance: `${BASE_URL}/discover/movie?api_key=${api_key}&with_genres=10749`,
-    // fetchScienceFiction: `${BASE_URL}/discover/movie?api_key=${api_key}&with_genres=878`,
+    Movies: `${BASE_URL}/trending/movie/week?api_key=${api_key}&language=en-US`,
+
+    GenreList: `${BASE_URL}/genre/movie/list?api_key=${api_key}&language=en-US`,
 };
 
 const requestUniqueMovie = (id) => {
-    return `${BASE_URL}/movie/${id}?api_key=${api_key}&append_to_response=videos`;
+    return `${BASE_URL}/movie/${id}?api_key=${api_key}&language=en`;
 };
 
 export { requests, requestUniqueMovie };
