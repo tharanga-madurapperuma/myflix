@@ -18,6 +18,7 @@ const EditProfile  = () => {
   const [firstname, setFirstname] = useState(""); // Used only for signup
   const [lastname, setLastname] = useState(""); // Used only for signup
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
 
 
@@ -29,6 +30,7 @@ const EditProfile  = () => {
       console.log("User updated successfully:", updatedUser);
       // Optionally update local state or navigate to another page
     } catch (error) {
+      setError("An error occurred. Please try again.");
       console.error("Error updating user:", error);
       // Optionally display an error message to the user
     }
@@ -52,14 +54,14 @@ const EditProfile  = () => {
                   placeholder="First Name"
                   value={firstname}
                   onChange={(e) => setFirstname(e.target.value)}
-                  required
+                  
                 />
                 <input
                   type="text"
                   placeholder="Last Name"
                   value={lastname}
                   onChange={(e) => setLastname(e.target.value)}
-                  required
+                  
                 />
  
             <input
@@ -74,13 +76,14 @@ const EditProfile  = () => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
+              
             />
           </div>
           <button type="submit" className="edit-button">
             Edit Profile
           </button>
         </form>
+        {error && <p className="error-message">{error}</p>}
       </div>
     </div>
     </>

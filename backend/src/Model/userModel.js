@@ -24,10 +24,19 @@ const findUserByEmail = async (email) => {
   }
 };
 
-
-const editUserByEmail = async (email, updates) => {
+const findUserById = async (userId) => {
   try {
-    const { firstName, lastName, password, role="user" } = updates;
+    const result = await pool.query("SELECT * FROM userMovie WHERE id = $1", [userId]);
+    return result.rows[0];
+  } catch (err) {
+    throw new Error("Error fetching user by ID");
+  }
+};
+
+
+const editUserById = async (userId, updates) => {
+  try {
+    const { firstName, lastName, password, role = "user" } = updates;
 
     // Build dynamic query based on provided fields
     const fields = [];
@@ -55,22 +64,22 @@ const editUserByEmail = async (email, updates) => {
       throw new Error("No updates provided");
     }
 
-    values.push(email); // Add `email` as the last value for WHERE clause
+    values.push(userId); // Add `userId` as the last value for WHERE clause
 
     const query = `
       UPDATE usermovie
       SET ${fields.join(", ")}
-      WHERE email = $${index}
+      WHERE id = $${index}
       RETURNING *;
     `;
 
     const result = await pool.query(query, values);
     return result.rows[0];
   } catch (err) {
-    console.error("Error editing user by email:", err);
+    console.error("Error editing user by ID:", err);
     throw new Error("Error editing user");
   }
 };
 
 
-module.exports = { registerUser, findUserByEmail,editUserByEmail };
+module.exports = { registerUser, findUserByEmail,editUserById,findUserById };

@@ -18,7 +18,21 @@ const generateToken = (user) => {
 
 // Verify JWT token
 const verifyToken = (token) => {
-  return jwt.verify(token, process.env.JWT_SECRET);
+  try {
+    return jwt.verify(token, process.env.JWT_SECRET); // Verifies the token and decodes it
+  } catch (err) {
+    throw new Error("Invalid or expired token");
+  }
 };
 
-module.exports = { hashPassword, comparePassword, generateToken, verifyToken };
+// Decode JWT token and get user id (with verification)
+const decodeToken = (token) => {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify and decode token
+    return decoded.id; // Return the user id from the decoded token
+  } catch (err) {
+    throw new Error("Invalid or expired token");
+  }
+};
+
+module.exports = { hashPassword, comparePassword, generateToken, verifyToken, decodeToken };

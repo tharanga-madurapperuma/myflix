@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState,useContext } from "react";
+import { useParams,useNavigate } from "react-router-dom";
+import AuthContext from '../../Context/AuthContext';
 import { authenticateUser } from "../../Api/api";
-import { handleAuthenticationSuccess } from "../../Api/api";
 import NotFound from "../../Components/NotFound/NotFound";
 
 import "./authform.css";
+
 const LoadingSpinner = () => (
   <div className="loading-spinner">
     <div className="spinner"></div>
@@ -13,26 +14,27 @@ const LoadingSpinner = () => (
 
 const AuthForm = () => {
   const { mode } = useParams();
+  const { login, signup } = useContext(AuthContext);
   const navigate = useNavigate();
-  // Declare all state hooks here, before any conditional logic
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [firstname, setFirstname] = useState(""); // Used only for signup
-  const [lastname, setLastname] = useState(""); // Used only for signup
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Check if the mode is valid
   const validModes = ["login", "signup"];
   const currentMode = validModes.includes(mode) ? mode : null;
 
   if (!currentMode) {
-    // If mode is invalid, render the 404 page
     return <NotFound />;
   }
 
   const handleAuth = async (e) => {
     e.preventDefault();
     setIsLoading(true);
+  
     try {
       const response = await authenticateUser(
         mode,
@@ -41,18 +43,21 @@ const AuthForm = () => {
         firstname,
         lastname
       );
-      console.log(
-        `${mode === "login" ? "Login" : "Signup"} successful`,
-        response
-      );
-
-      // On successful login/signup, handle token storage and navigation
-      handleAuthenticationSuccess(mode, response.token, navigate);
+  
+      // Use the context's login or signup methods based on the mode
+      if (mode === 'signup') {
+        signup(response.token); // Provided by AuthContext
+      } else {
+        login(response.token); // Provided by AuthContext
+      }
+  
+      // Clear form fields after successful authentication
       setEmail("");
       setPassword("");
       setFirstname("");
       setLastname("");
     } catch (error) {
+      setError("An error occurred. Please try again.");
       console.error(`Error during ${mode}`, error);
     } finally {
       setIsLoading(false);
@@ -103,6 +108,26 @@ const AuthForm = () => {
             {currentMode === "login" ? "Log In" : "Sign Up"}
           </button>
         </form>
+        <div className="switch-container">
+          <p>
+            {currentMode === "login"
+              ? "Don't have an account?"
+              : "Already have an account?"}
+            <span
+              className="auth-switch"
+              onClick={() =>
+                navigate(currentMode === "login" ? "/auth/signup" : "/auth/login")
+              }
+            >
+              {currentMode === "login" ? " Sign Up" : " Log In"}
+            </span>
+          </p>
+        </div>
+        {error && (
+          <div className="error-message">
+            <p>{error}</p>
+          </div>
+        )}
       </div>
     </div>
   );

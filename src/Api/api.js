@@ -33,6 +33,7 @@ export const handleAuthenticationSuccess = (mode, token, navigate) => {
   if (mode === "signup") {
     navigate("/auth/login"); // Redirect to login after successful signup
   } else {
+    
     navigate("/"); // Redirect to home after login
   }
 };
@@ -41,8 +42,7 @@ export const handleAuthenticationSuccess = (mode, token, navigate) => {
 //Function to Edit user
 
 export const editUser = async (email, firstName, lastName, password) => {
-  const endpoint = `${API_BASE_URL}/auth/edit`; // Use userId to identify which user to edit
-
+  const endpoint = `${API_BASE_URL}/auth/edit`; // 
 
   const payload = {
     email,
@@ -50,12 +50,23 @@ export const editUser = async (email, firstName, lastName, password) => {
     lastName,
     ...(password && { password }) // Include password only if it is provided
   };
+
+  // Retrieve the JWT token from localStorage 
+  const token = localStorage.getItem('authToken');
+
+  const headers = {
+    Authorization: token ? `Bearer ${token}` : '', // Attach the token if it exists
+    'Content-Type': 'application/json' // Ensure proper content type
+  };
+
   console.log(payload);
+  
   try {
-    const response = await axios.post(endpoint, payload); // Use PUT for updates
+    const response = await axios.put(endpoint, payload, { headers }); // Include headers with JWT token
     return response.data;
   } catch (error) {
     throw error; // Propagate the error to be handled in the calling function
   }
 };
+
 

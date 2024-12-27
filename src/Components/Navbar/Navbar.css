@@ -22,20 +22,32 @@
     font-family: "Roboto", sans-serif;
 }
 
+.navBar-container ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex; 
+}
+
 .navBar-container ul li {
     display: inline-block;
-    color: var(--color-text-normal);
-    font-weight: 400;
-    font-size: 1rem;
     margin: 0 30px;
     transition-duration: 0.5s;
 }
 
-.navBar-container ul li:hover {
+.navBar-container ul li a {
+    color: var(--color-text-normal);
+    text-decoration: none;
+    font-weight: 400;
+    font-size: 1rem;
+    transition: color 0.5s;
+}
+
+.navBar-container ul li:hover a {
     color: var(--color-light);
-    border: none;
     cursor: pointer;
 }
+
 
 .navBar__user {
     color: var(--color-text-normal);

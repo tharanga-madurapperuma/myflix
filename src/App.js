@@ -13,9 +13,10 @@ import "./App.css";
 
 function App() {
   return (
-    <AuthProvider>
+    
       <div className="App">
         <Router>
+        <AuthProvider>
           <Routes>
             {/* Public routes */}
             <Route path="auth/:mode" element={<AuthForm />} />
@@ -30,9 +31,10 @@ function App() {
             {/* Catch all route */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          </AuthProvider>
         </Router>
       </div>
-    </AuthProvider>
+    
   );
 }
 
