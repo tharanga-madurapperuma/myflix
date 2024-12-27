@@ -24,6 +24,13 @@ const movieReviews = (id) => {
 const seriesReviews = (id) => {
     return `${BASE_URL}/tv/${id}/reviews?api_key=${api_key}&language=en-US&page=1`;
 };
+const searchMovie = (searchText) => {
+    return `${BASE_URL}/search/movie?api_key=${api_key}&language=en-US&query=${searchText}&page=1`;
+};
+
+const searchSeries = (searchText) => {
+    return `${BASE_URL}/search/tv?api_key=${api_key}&language=en-US&query=${searchText}&page=1`;
+};
 
 const movieCategories = [
     {
@@ -86,4 +93,6 @@ export {
     requestMoreSeriesDetails,
     movieReviews,
     seriesReviews,
+    searchMovie,
+    searchSeries,
 };

@@ -18,9 +18,9 @@ const Banner = () => {
                 ];
             setMovie(fetchedMovie);
             const uniqueRequest = await axios.get(
-                requestUniqueMovie(fetchedMovie.id)
+                requestUniqueMovie(fetchedMovie?.id)
             );
-            setUniqueMovie(uniqueRequest.data);
+            setUniqueMovie(uniqueRequest?.data);
         }
         fetchData();
     }, []);

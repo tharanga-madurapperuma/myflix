@@ -3,8 +3,17 @@
     flex-direction: column;
     width: 100%;
     align-items: center;
-    overflow-x: scroll;
     background-color: var(--color-background-dark);
+    overflow-x: hidden;
+}
+
+.container-outer {
+    width: 100%;
+    overflow: scroll;
+}
+
+.container-outer::-webkit-scrollbar {
+    display: none;
 }
 
 .container-video {
@@ -12,7 +21,6 @@
     height: 50vh;
     display: flex;
     justify-content: left;
-    overflow-x: scroll;
     margin-top: 80px;
 }
 
