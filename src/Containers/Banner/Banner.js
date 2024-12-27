@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./Banner.css";
-import { requests, requestUniqueMovie } from "../requests";
+import { adventure, requestUniqueMovie } from "../requests";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPlus } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
@@ -11,7 +11,7 @@ const Banner = () => {
 
     useEffect(() => {
         async function fetchData() {
-            const request = await axios.get(requests.fetchAdventure);
+            const request = await axios.get(adventure);
             const fetchedMovie =
                 request.data.results[
                     Math.floor(Math.random() * request.data.results.length - 1)
@@ -24,7 +24,7 @@ const Banner = () => {
         }
         fetchData();
     }, []);
-
+    console.log(uniqueMovie);
     return (
         <div className="banner__wrapper">
             <div
