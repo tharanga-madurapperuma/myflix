@@ -1,76 +1,78 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../Components/Navbar/Navbar";
-import "./Movies.css";
-import { allGenreList, movieCategories } from "../requests";
+import "./TVSeries.css";
+import { allGenreListTV, TVCategories } from "../requests";
 import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import Footer from "../Footer/Footer";
 
-const Movies = () => {
+const TVSeries = () => {
     const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original/";
     const [genreList, setGenreList] = useState();
-    const [galleryMovies, setGalleryMovies] = useState();
+    const [galleryTVSeries, setGalleryTVSeries] = useState();
     const [activeCategory, setActiveCategory] = useState(0);
     const [activeGenres, setActiveGenres] = useState([]);
 
     useEffect(() => {
         const fetchGenres = async () => {
-            const request = await axios.get(allGenreList);
+            const request = await axios.get(allGenreListTV);
             setGenreList(request.data.genres);
         };
 
-        const fetchGalleryMovies = async () => {
-            const request = await axios.get(movieCategories[0].request);
-            setGalleryMovies(request.data.results);
+        const fetchGalleryTVSeries = async () => {
+            const request = await axios.get(TVCategories[0].request);
+            setGalleryTVSeries(request.data.results);
         };
 
         fetchGenres();
-        fetchGalleryMovies();
+        fetchGalleryTVSeries();
     }, []);
-
+    console.log(galleryTVSeries);
     useEffect(() => {
-        const fetchMovieCategory = async (category) => {
-            const request = await axios.get(movieCategories[category].request);
-            setGalleryMovies(request.data.results);
+        const fetchTVSeriesCategory = async (category) => {
+            const request = await axios.get(TVCategories[category].request);
+            setGalleryTVSeries(request.data.results);
         };
 
         for (let i = 0; i < 5; i++) {
             if (activeCategory === i) {
-                fetchMovieCategory(i);
+                fetchTVSeriesCategory(i);
             }
         }
     }, [activeCategory]);
 
     useEffect(() => {
         if (activeGenres.length > 0) {
-            const filteredMovies = galleryMovies.filter((movie) =>
-                activeGenres.every((genre) => movie.genre_ids.includes(genre))
+            const filteredTVSeries = galleryTVSeries.filter((tvSeries) =>
+                activeGenres.every((genre) =>
+                    tvSeries.genre_ids.includes(genre)
+                )
             );
-            setGalleryMovies(filteredMovies);
+            setGalleryTVSeries(filteredTVSeries);
         } else {
-            const fetchGalleryMovies = async () => {
+            const fetchGalleryTVSeries = async () => {
                 const request = await axios.get(
-                    movieCategories[activeCategory].request
+                    TVCategories[activeCategory].request
                 );
-                setGalleryMovies(request.data.results);
+                setGalleryTVSeries(request.data.results);
             };
-            fetchGalleryMovies();
+            fetchGalleryTVSeries();
         }
     }, [activeGenres]);
 
     return (
         <div>
-            <div className="content__movie">
+            <div className="content__tvSeries">
                 <Navbar />
-                <div className="movie-categories">
-                    {movieCategories.map((category) => {
+                <div className="tvSeries-categories">
+                    {TVCategories.map((category) => {
                         return (
                             <div
                                 className={
                                     activeCategory === category?.id
-                                        ? "movie-categories_category-active"
-                                        : "movie-categories_category"
+                                        ? "tvSeries-categories_category-active"
+                                        : "tvSeries-categories_category"
                                 }
                                 onClick={() => setActiveCategory(category.id)}
                             >
@@ -87,7 +89,7 @@ const Movies = () => {
                     })}
                 </div>
                 <div className="white-line"></div>
-                <div className="movie-genres">
+                <div className="tvSeries-genres">
                     <Swiper
                         className="genre-swiper"
                         loop={true}
@@ -107,8 +109,8 @@ const Movies = () => {
                                         <div
                                             className={
                                                 activeGenres.includes(genre.id)
-                                                    ? "movie-genres_genre-active"
-                                                    : "movie-genres_genre"
+                                                    ? "tvSeries-genres_genre-active"
+                                                    : "tvSeries-genres_genre"
                                             }
                                             onClick={() => {
                                                 activeGenres.includes(genre.id)
@@ -132,11 +134,11 @@ const Movies = () => {
                             })}
                     </Swiper>
                 </div>
-                <div className="movie-search">
+                <div className="tvSeries-search">
                     <input
                         className="search-input"
                         type="text"
-                        placeholder="Search Movie"
+                        placeholder="Search TV Series"
                     />
                     <input
                         className="search-button"
@@ -144,21 +146,21 @@ const Movies = () => {
                         value="Search"
                     />
                 </div>
-                <div className="movie-list">
-                    {galleryMovies &&
-                        galleryMovies.map((movie) => {
+                <div className="tvSeries-list">
+                    {galleryTVSeries &&
+                        galleryTVSeries.map((tvSeries) => {
                             return (
-                                <div className="movie-list__movie">
+                                <div className="tvSeries-list__tvSeries">
                                     <img
-                                        src={`${IMAGE_BASE_URL}${movie.poster_path}`}
-                                        alt={movie.title}
+                                        src={`${IMAGE_BASE_URL}${tvSeries.poster_path}`}
+                                        alt={tvSeries.name}
                                     />
-                                    <div className="movie-title">
-                                        {movie.title}
+                                    <div className="tvSeries-title">
+                                        {tvSeries.name}
                                     </div>
-                                    <div className="movie-info">
-                                        <p>{movie.release_date}</p>
-                                        <span>{movie.vote_average}</span>
+                                    <div className="tvSeries-info">
+                                        <p>{tvSeries.first_air_date}</p>
+                                        <span>{tvSeries.vote_average}</span>
                                     </div>
                                 </div>
                             );
@@ -166,11 +168,11 @@ const Movies = () => {
                 </div>
                 <div className="white-line"></div>
             </div>
-            <div className="movie-footer">
+            <div className="tvSeries-footer">
                 <Footer />
             </div>
         </div>
     );
 };
 
-export default Movies;
+export default TVSeries;

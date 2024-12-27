@@ -27,7 +27,13 @@ const Navbar = ({ name }) => {
                     >
                         Movies
                     </li>
-                    <li href="#">TV Shows</li>
+                    <li
+                        onClick={() => {
+                            navigate("/tvShows");
+                        }}
+                    >
+                        TV Shows
+                    </li>
                 </ul>
                 <div className="navBar__user">
                     <FaUserCircle className="user-icon" />

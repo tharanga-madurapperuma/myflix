@@ -1,4 +1,4 @@
-.content__movie {
+.content__tvSeries {
     background-color: var(--color-background-dark);
     color: var(--color-text-normal);
     display: flex;
@@ -8,14 +8,14 @@
     align-items: center;
 }
 
-.movie-categories {
+.tvSeries-categories {
     width: 100%;
     display: flex;
     justify-content: space-evenly;
     margin-top: 30px;
 }
 
-.movie-categories_category {
+.tvSeries-categories_category {
     font-size: 1rem;
     color: var(--color-background-placeholder);
     font-weight: 400;
@@ -27,7 +27,7 @@
     transition: 0.5s;
 }
 
-.movie-categories_category-active {
+.tvSeries-categories_category-active {
     font-size: 1.2rem;
     color: var(--color-text-normal);
     font-weight: 500;
@@ -53,7 +53,7 @@
     margin-top: 5px;
 }
 
-.movie-genres {
+.tvSeries-genres {
     width: 80%;
     display: flex;
     overflow-x: scroll;
@@ -61,11 +61,11 @@
     margin: 20px 0;
 }
 
-.movie-genres::-webkit-scrollbar {
+.tvSeries-genres::-webkit-scrollbar {
     display: none;
 }
 
-.movie-genres_genre {
+.tvSeries-genres_genre {
     text-wrap: nowrap;
     font-size: 0.9rem;
     background-color: var(--color-background-normal);
@@ -79,7 +79,7 @@
     transition: transform 0.3s;
 }
 
-.movie-genres_genre-active {
+.tvSeries-genres_genre-active {
     text-wrap: nowrap;
     font-size: 0.9rem;
     background-color: var(--color-light);
@@ -99,8 +99,8 @@
     width: 80%;
 }
 
-/* MOVIE GALLERY */
-.movie-list {
+/* TV SERIES GALLERY */
+.tvSeries-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
@@ -108,7 +108,7 @@
     margin: 100px 0;
 }
 
-.movie-list__movie {
+.tvSeries-list__tvSeries {
     width: 200px;
     padding: 8px;
     display: flex;
@@ -122,11 +122,11 @@
     transition: 0.5s ease;
 }
 
-.movie-list__movie:hover {
+.tvSeries-list__tvSeries:hover {
     transform: scale(1.05);
 }
 
-.movie-title {
+.tvSeries-title {
     width: 100%;
     margin-top: 5px;
     font-weight: 500;
@@ -138,21 +138,21 @@
     text-overflow: ellipsis;
 }
 
-.movie-info {
+.tvSeries-info {
     width: 100%;
     display: flex;
     justify-content: space-between;
     font-weight: 400;
     font-size: 0.9rem;
-    margin-top: 2px;
+    margin-top: 5px;
 }
 
-.movie-info span {
+.tvSeries-info span {
     font-weight: 500;
     color: var(--color-light);
 }
 
-.movie-list__movie img {
+.tvSeries-list__tvSeries img {
     width: 200px;
     border-radius: 5px;
     height: 100%;
@@ -178,7 +178,7 @@
 }
 
 /* SEARCH */
-.movie-search {
+.tvSeries-search {
     width: 80%;
     margin: 20px 0;
     position: relative;
