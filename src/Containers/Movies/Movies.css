@@ -99,8 +99,6 @@
     width: 80%;
 }
 
-/* SEARCH */
-
 /* MOVIE GALLERY */
 .movie-list {
     display: grid;
@@ -178,3 +176,32 @@
 }
 
 /* SEARCH */
+.movie-search {
+    width: 80%;
+    margin: 20px 0;
+    position: relative;
+}
+
+.search-input {
+    width: 95%;
+    background-color: var(--color-background-normal);
+    padding: 10px 20px;
+    outline: none;
+    border: none;
+    border-radius: 30px;
+    color: var(--color-text-normal);
+}
+
+.search-button {
+    background-color: var(--color-light);
+    color: var(--color-background-dark);
+    padding: 10px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: 0.5s;
+    font-size: 0.8rem;
+    border: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+}

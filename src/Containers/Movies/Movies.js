@@ -133,8 +133,16 @@ const Movies = () => {
                     </Swiper>
                 </div>
                 <div className="movie-search">
-                    <input type="text" placeholder="Search" />
-                    <input type="submit" value="Search" />
+                    <input
+                        className="search-input"
+                        type="text"
+                        placeholder="Search Movie"
+                    />
+                    <input
+                        className="search-button"
+                        type="submit"
+                        value="Search"
+                    />
                 </div>
                 <div className="movie-list">
                     {galleryMovies &&
