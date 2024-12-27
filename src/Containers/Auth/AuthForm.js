@@ -1,6 +1,6 @@
-import { useState,useContext } from "react";
-import { useParams,useNavigate } from "react-router-dom";
-import AuthContext from '../../Context/AuthContext';
+import { useState, useContext, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import AuthContext from "../../Context/AuthContext";
 import { authenticateUser } from "../../Api/api";
 import NotFound from "../../Components/NotFound/NotFound";
 
@@ -24,6 +24,14 @@ const AuthForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  useEffect(() => {
+    setError(null);
+    setEmail("");
+    setPassword("");
+    setFirstname("");
+    setLastname("");
+  }, [mode]);
+
   const validModes = ["login", "signup"];
   const currentMode = validModes.includes(mode) ? mode : null;
 
@@ -34,7 +42,7 @@ const AuthForm = () => {
   const handleAuth = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-  
+
     try {
       const response = await authenticateUser(
         mode,
@@ -43,14 +51,14 @@ const AuthForm = () => {
         firstname,
         lastname
       );
-  
+
       // Use the context's login or signup methods based on the mode
-      if (mode === 'signup') {
+      if (mode === "signup") {
         signup(response.token); // Provided by AuthContext
       } else {
         login(response.token); // Provided by AuthContext
       }
-  
+
       // Clear form fields after successful authentication
       setEmail("");
       setPassword("");
@@ -116,7 +124,9 @@ const AuthForm = () => {
             <span
               className="auth-switch"
               onClick={() =>
-                navigate(currentMode === "login" ? "/auth/signup" : "/auth/login")
+                navigate(
+                  currentMode === "login" ? "/auth/signup" : "/auth/login"
+                )
               }
             >
               {currentMode === "login" ? " Sign Up" : " Log In"}

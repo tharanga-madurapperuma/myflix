@@ -95,7 +95,7 @@ const getUserInfoController = async (req, res) => {
   try {
     // Decode the token to get the user id
     const userId = decodeToken(token); // Assuming decodeToken is imported from utils
-
+   
     // Fetch user details by userId
     const user = await findUserById(userId);
 

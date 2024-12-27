@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { getUserDetails } from '../Api/api';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -47,23 +47,14 @@ export const AuthProvider = ({ children }) => {
   }, [authToken]);
 
   const fetchUserData = async () => {
-    // try {
-    //   const response = await fetch('/api/user', {
-    //     headers: {
-    //       Authorization: `Bearer ${authToken}`,
-    //     },
-    //   });
-    //   if (response.ok) {
-    //     const data = await response.json();
-    //     setUser(data);
-    //   } else {
-    //     console.error('Failed to fetch user data');
-    //     logout(); // Logout if token is invalid or expired
-    //   }
-    // } catch (error) {
-    //   console.error('Error fetching user data:', error);
-    //   logout();
-    // }
+    try {
+      const data = await getUserDetails(); 
+      console.log(data);
+      setUser(data.user); // Set the user data in state
+    } catch (error) {
+      console.error('Failed to fetch user data:', error);
+      
+    }
   };
 
   return (
