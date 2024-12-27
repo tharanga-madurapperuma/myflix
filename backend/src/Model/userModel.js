@@ -24,4 +24,62 @@ const findUserByEmail = async (email) => {
   }
 };
 
-module.exports = { registerUser, findUserByEmail };
+const findUserById = async (userId) => {
+  try {
+    const result = await pool.query("SELECT * FROM userMovie WHERE id = $1", [userId]);
+    return result.rows[0];
+  } catch (err) {
+    throw new Error("Error fetching user by ID");
+  }
+};
+
+
+const editUserById = async (userId, updates) => {
+  try {
+    const { firstName, lastName, password, role = "user" } = updates;
+
+    // Build dynamic query based on provided fields
+    const fields = [];
+    const values = [];
+    let index = 1;
+
+    if (firstName) {
+      fields.push(`first_name = $${index++}`);
+      values.push(firstName);
+    }
+    if (lastName) {
+      fields.push(`last_name = $${index++}`);
+      values.push(lastName);
+    }
+    if (password) {
+      fields.push(`password = $${index++}`);
+      values.push(password);
+    }
+    if (role) {
+      fields.push(`role = $${index++}`);
+      values.push(role);
+    }
+
+    if (fields.length === 0) {
+      throw new Error("No updates provided");
+    }
+
+    values.push(userId); // Add `userId` as the last value for WHERE clause
+
+    const query = `
+      UPDATE usermovie
+      SET ${fields.join(", ")}
+      WHERE id = $${index}
+      RETURNING *;
+    `;
+
+    const result = await pool.query(query, values);
+    return result.rows[0];
+  } catch (err) {
+    console.error("Error editing user by ID:", err);
+    throw new Error("Error editing user");
+  }
+};
+
+
+module.exports = { registerUser, findUserByEmail,editUserById,findUserById };

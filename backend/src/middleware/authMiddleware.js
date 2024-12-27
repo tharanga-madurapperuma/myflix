@@ -10,6 +10,7 @@ const authenticateToken = (req, res, next) => {
   try {
     const decoded = verifyToken(token); // Use utility to verify token
     req.user = decoded;
+    console.log("Authenticated user:", decoded);
     next();
   } catch (err) {
     res.status(403).json({ error: "Forbidden" });

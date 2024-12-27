@@ -1,5 +1,5 @@
-const { hashPassword, comparePassword, generateToken } = require("../Utils/authUtils");
-const { registerUser, findUserByEmail } = require("../Model/userModel");
+const { hashPassword, comparePassword, generateToken,decodeToken } = require("../Utils/authUtils");
+const { registerUser, findUserByEmail,editUserById,findUserById } = require("../Model/userModel");
 
 const registerUserController = async (req, res) => {
   const { firstName, lastName, email, password, role } = req.body;
@@ -29,6 +29,7 @@ const loginUserController = async (req, res) => {
 
   try {
     const user = await findUserByEmail(email);
+    
 
     if (!user) {
       return res.status(401).json({ error: "Invalid credentials" });
@@ -49,4 +50,70 @@ const loginUserController = async (req, res) => {
   }
 };
 
-module.exports = { registerUserController, loginUserController };
+//Edit user details
+const editUserController = async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1]; // Extract token from Authorization header (Bearer token)
+
+  if (!token) {
+    return res.status(401).json({ error: "No token provided" });
+  }
+
+  try {
+    // Decode the token and get the user id
+    const userId = decodeToken(token); // Decode the token to get the user id
+
+    const updates = req.body; // Contains fields to update
+
+    // Check if the user exists by id
+    const user = await findUserById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Hash password if it's part of updates
+    if (updates.password) {
+      updates.password = await hashPassword(updates.password);
+    }
+
+    // Edit the user by their id
+    const updatedUser = await editUserById(userId, updates);
+    res.status(200).json({ message: "User updated successfully", user: updatedUser });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error updating user" });
+  }
+};
+
+
+const getUserInfoController = async (req, res) => {
+  const token = req.headers.authorization?.split(" ")[1]; // Extract token from Authorization header (Bearer token)
+
+  if (!token) {
+    return res.status(401).json({ error: "No token provided" });
+  }
+
+  try {
+    // Decode the token to get the user id
+    const userId = decodeToken(token); // Assuming decodeToken is imported from utils
+   
+    // Fetch user details by userId
+    const user = await findUserById(userId);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Return user info (excluding sensitive fields like password)
+    const { password, ...userInfo } = user; // Exclude password field
+    res.status(200).json({ message: "User retrieved successfully", user: userInfo });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error retrieving user information" });
+  }
+};
+
+
+
+
+
+module.exports = { registerUserController, loginUserController, editUserController,getUserInfoController};
