@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../Components/Navbar/Navbar";
 import "./Movies.css";
-import { allGenreList, movieCategories } from "../requests";
+import { allGenreList, movieCategories, searchMovie } from "../requests";
 import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
@@ -14,6 +14,7 @@ const Movies = ({ name }) => {
     const [galleryMovies, setGalleryMovies] = useState();
     const [activeCategory, setActiveCategory] = useState(0);
     const [activeGenres, setActiveGenres] = useState([]);
+    const [searchText, setSearchText] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -60,6 +61,21 @@ const Movies = ({ name }) => {
             fetchGalleryMovies();
         }
     }, [activeGenres]);
+
+    const fetchMovie = async () => {
+        const request = await axios.get(searchMovie(searchText));
+        if (searchText === "") {
+            const getMovies = async () => {
+                const request = await axios.get(
+                    movieCategories[activeCategory].request
+                );
+                setGalleryMovies(request.data.results);
+            };
+            getMovies();
+        } else {
+            setGalleryMovies(request.data.results);
+        }
+    };
 
     return (
         <div>
@@ -139,11 +155,13 @@ const Movies = ({ name }) => {
                         className="search-input"
                         type="text"
                         placeholder="Search Movie"
+                        onChange={(e) => setSearchText(e.target.value)}
                     />
                     <input
                         className="search-button"
                         type="submit"
                         value="Search"
+                        onClick={fetchMovie}
                     />
                 </div>
                 <div className="movie-list">
