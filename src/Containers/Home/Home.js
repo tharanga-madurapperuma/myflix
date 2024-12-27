@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import "./Home.css";
 import Banner from "../Banner/Banner";
 import Navbar from "../../Components/Navbar/Navbar";
-import Movies from "../Movies/Movies";
 import Footer from "../Footer/Footer";
+import NowPlaying from "../NowPlaying/NowPlaying";
+import { requests } from "../requests";
+import axios from "axios";
 
 const Home = () => {
     const [loggedUser, setLoggedUser] = useState(null);
@@ -25,7 +27,7 @@ const Home = () => {
                 <Banner />
             </div>
             <div className="home__secondSection">
-                <Movies />
+                <NowPlaying />
                 <Footer />
             </div>
         </div>

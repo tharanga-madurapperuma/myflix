@@ -7,12 +7,13 @@ import NotFound from "../../Components/NotFound/NotFound";
 import "./authform.css";
 
 const LoadingSpinner = () => (
-  <div className="loading-spinner">
-    <div className="spinner"></div>
-  </div>
+    <div className="loading-spinner">
+        <div className="spinner"></div>
+    </div>
 );
 
 const AuthForm = () => {
+
   const { mode } = useParams();
   const { login, signup } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -131,6 +132,8 @@ const AuthForm = () => {
       </div>
     </div>
   );
+
+   
 };
 
 export default AuthForm;
