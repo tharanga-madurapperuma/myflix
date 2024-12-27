@@ -5,7 +5,7 @@ import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 import { EffectCoverflow, Pagination, Autoplay } from "swiper/modules";
-import { requests } from "../requests";
+import { adventure } from "../requests";
 import axios from "axios";
 
 const NowPlaying = () => {
@@ -14,7 +14,7 @@ const NowPlaying = () => {
 
     useEffect(() => {
         const fetchTrending = async () => {
-            const request = await axios.get(requests.NowPlaying);
+            const request = await axios.get(adventure);
             setTrendingMovies(request.data.results);
 
             return request;

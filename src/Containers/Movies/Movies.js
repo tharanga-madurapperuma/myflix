@@ -1,43 +1,45 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../Components/Navbar/Navbar";
 import "./Movies.css";
-import { requests } from "../requests";
+import { allGenreList, categories } from "../requests";
 import axios from "axios";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
 
 const Movies = () => {
+    const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original/";
     const [genreList, setGenreList] = useState();
-
-    const categories = [
-        {
-            name: "Trending",
-            className: "trending",
-        },
-        {
-            name: "Now Playing",
-            className: "nowPlaying",
-        },
-        {
-            name: "Top Rated",
-            className: "topRated",
-        },
-        {
-            name: "Popular",
-            className: "popular",
-        },
-        {
-            name: "Upcoming",
-            className: "upcoming",
-        },
-    ];
+    const [galleryMovies, setGalleryMovies] = useState();
+    const [activeCategory, setActiveCategory] = useState(0);
+    const [activeGenres, setActiveGenres] = useState([]);
 
     useEffect(() => {
         const fetchGenres = async () => {
-            const request = await axios.get(requests.GenreList);
+            const request = await axios.get(allGenreList);
             setGenreList(request.data.genres);
         };
 
+        const fetchGalleryMovies = async () => {
+            const request = await axios.get(categories[0].request);
+            setGalleryMovies(request.data.results);
+        };
+
         fetchGenres();
+        fetchGalleryMovies();
     }, []);
+
+    useEffect(() => {
+        const fetchMovieCategory = async (category) => {
+            const request = await axios.get(categories[category].request);
+            setGalleryMovies(request.data.results);
+        };
+
+        for (let i = 0; i < 5; i++) {
+            if (activeCategory === i) {
+                fetchMovieCategory(i);
+            }
+        }
+    }, [activeCategory]);
 
     return (
         <div>
@@ -47,31 +49,75 @@ const Movies = () => {
                     {categories.map((category) => {
                         return (
                             <div
-                                className={`movie-categories_${category.className}`}
+                                className={
+                                    activeCategory === category?.id
+                                        ? "movie-categories_category-active"
+                                        : "movie-categories_category"
+                                }
+                                onClick={() => setActiveCategory(category.id)}
                             >
                                 <p>{category.name}</p>
                                 <div
-                                    className={`${category.className}-line`}
+                                    className={
+                                        activeCategory === category?.id
+                                            ? "category-line-active"
+                                            : "category-line"
+                                    }
                                 ></div>
                             </div>
                         );
                     })}
                 </div>
-                <div>
-                    <hr />
-                </div>
+                <div className="white-line"></div>
                 <div className="movie-genres">
-                    {genreList &&
-                        genreList.map((genre) => {
+                    <Swiper
+                        className="genre-swiper"
+                        loop={true}
+                        centeredSlides={false}
+                        slidesPerView={"auto"}
+                        autoplay={{
+                            delay: 0,
+                            disableOnInteraction: false,
+                        }}
+                        speed={3000}
+                        modules={[Autoplay]}
+                    >
+                        {genreList &&
+                            genreList.map((genre) => {
+                                return (
+                                    <SwiperSlide className="genre-swiper-slide">
+                                        <div className="movie-genres_genre">
+                                            <p>{genre.name}</p>
+                                        </div>
+                                    </SwiperSlide>
+                                );
+                            })}
+                    </Swiper>
+                </div>
+                <div className="movie-search">
+                    <input type="text" placeholder="Search" />
+                    <input type="submit" value="Search" />
+                </div>
+                <div className="movie-list">
+                    {galleryMovies &&
+                        galleryMovies.map((movie) => {
                             return (
-                                <div className="movie-genres__genre">
-                                    <p>{genre.name}</p>
+                                <div className="movie-list__movie">
+                                    <img
+                                        src={`${IMAGE_BASE_URL}${movie.poster_path}`}
+                                        alt={movie.title}
+                                    />
+                                    <div className="movie-title">
+                                        {movie.title}
+                                    </div>
+                                    <div className="movie-info">
+                                        <p>{movie.release_date}</p>
+                                        <span>{movie.vote_average}</span>
+                                    </div>
                                 </div>
                             );
                         })}
                 </div>
-                <div className="movie-search"></div>
-                <div className="movie-list"></div>
                 <div>
                     <hr />
                 </div>

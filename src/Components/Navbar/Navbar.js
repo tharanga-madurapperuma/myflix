@@ -13,7 +13,13 @@ const Navbar = ({ name }) => {
                     <h1>MYFLIX</h1>
                 </div>
                 <ul>
-                    <li href="#">Home</li>
+                    <li
+                        onClick={() => {
+                            navigate("/");
+                        }}
+                    >
+                        Home
+                    </li>
                     <li
                         onClick={() => {
                             navigate("/movies");
