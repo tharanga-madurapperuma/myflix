@@ -6,13 +6,15 @@ import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import Footer from "../Footer/Footer";
+import { useNavigate } from "react-router-dom";
 
-const Movies = () => {
+const Movies = ({ name }) => {
     const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original/";
     const [genreList, setGenreList] = useState();
     const [galleryMovies, setGalleryMovies] = useState();
     const [activeCategory, setActiveCategory] = useState(0);
     const [activeGenres, setActiveGenres] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchGenres = async () => {
@@ -62,7 +64,7 @@ const Movies = () => {
     return (
         <div>
             <div className="content__movie">
-                <Navbar />
+                <Navbar name={name} />
                 <div className="movie-categories">
                     {movieCategories.map((category) => {
                         return (
@@ -148,7 +150,12 @@ const Movies = () => {
                     {galleryMovies &&
                         galleryMovies.map((movie) => {
                             return (
-                                <div className="movie-list__movie">
+                                <div
+                                    className="movie-list__movie"
+                                    onClick={() => {
+                                        navigate(`/movieTrailer/${movie.id}`);
+                                    }}
+                                >
                                     <img
                                         src={`${IMAGE_BASE_URL}${movie.poster_path}`}
                                         alt={movie.title}

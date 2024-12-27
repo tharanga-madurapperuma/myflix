@@ -6,13 +6,15 @@ import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import Footer from "../Footer/Footer";
+import { useNavigate } from "react-router-dom";
 
-const TVSeries = () => {
+const TVSeries = ({ name }) => {
     const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original/";
     const [genreList, setGenreList] = useState();
     const [galleryTVSeries, setGalleryTVSeries] = useState();
     const [activeCategory, setActiveCategory] = useState(0);
     const [activeGenres, setActiveGenres] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchGenres = async () => {
@@ -64,7 +66,7 @@ const TVSeries = () => {
     return (
         <div>
             <div className="content__tvSeries">
-                <Navbar />
+                <Navbar name={name} />
                 <div className="tvSeries-categories">
                     {TVCategories.map((category) => {
                         return (
@@ -150,7 +152,14 @@ const TVSeries = () => {
                     {galleryTVSeries &&
                         galleryTVSeries.map((tvSeries) => {
                             return (
-                                <div className="tvSeries-list__tvSeries">
+                                <div
+                                    className="tvSeries-list__tvSeries"
+                                    onClick={() => {
+                                        navigate(
+                                            `/seriesTrailer/${tvSeries.id}`
+                                        );
+                                    }}
+                                >
                                     <img
                                         src={`${IMAGE_BASE_URL}${tvSeries.poster_path}`}
                                         alt={tvSeries.name}
