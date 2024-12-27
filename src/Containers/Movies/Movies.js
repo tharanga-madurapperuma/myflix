@@ -5,6 +5,7 @@ import { allGenreList, categories } from "../requests";
 import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
+import Footer from "../Footer/Footer";
 
 const Movies = () => {
     const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original/";
@@ -40,6 +41,23 @@ const Movies = () => {
             }
         }
     }, [activeCategory]);
+
+    useEffect(() => {
+        if (activeGenres.length > 0) {
+            const filteredMovies = galleryMovies.filter((movie) =>
+                activeGenres.every((genre) => movie.genre_ids.includes(genre))
+            );
+            setGalleryMovies(filteredMovies);
+        } else {
+            const fetchGalleryMovies = async () => {
+                const request = await axios.get(
+                    categories[activeCategory].request
+                );
+                setGalleryMovies(request.data.results);
+            };
+            fetchGalleryMovies();
+        }
+    }, [activeGenres]);
 
     return (
         <div>
@@ -86,7 +104,27 @@ const Movies = () => {
                             genreList.map((genre) => {
                                 return (
                                     <SwiperSlide className="genre-swiper-slide">
-                                        <div className="movie-genres_genre">
+                                        <div
+                                            className={
+                                                activeGenres.includes(genre.id)
+                                                    ? "movie-genres_genre-active"
+                                                    : "movie-genres_genre"
+                                            }
+                                            onClick={() => {
+                                                activeGenres.includes(genre.id)
+                                                    ? setActiveGenres(
+                                                          activeGenres.filter(
+                                                              (activeGenre) =>
+                                                                  activeGenre !==
+                                                                  genre.id
+                                                          )
+                                                      )
+                                                    : setActiveGenres([
+                                                          ...activeGenres,
+                                                          genre.id,
+                                                      ]);
+                                            }}
+                                        >
                                             <p>{genre.name}</p>
                                         </div>
                                     </SwiperSlide>
@@ -118,10 +156,10 @@ const Movies = () => {
                             );
                         })}
                 </div>
-                <div>
-                    <hr />
-                </div>
-                <div className="movie-footer"></div>
+                <div className="white-line"></div>
+            </div>
+            <div className="movie-footer">
+                <Footer />
             </div>
         </div>
     );

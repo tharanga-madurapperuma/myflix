@@ -12,6 +12,7 @@
     width: 100%;
     display: flex;
     justify-content: space-evenly;
+    margin-top: 30px;
 }
 
 .movie-categories_category {
@@ -53,7 +54,7 @@
 }
 
 .movie-genres {
-    width: 90%;
+    width: 80%;
     display: flex;
     overflow-x: scroll;
     justify-content: left;
@@ -79,14 +80,23 @@
 }
 
 .movie-genres_genre-active {
+    text-wrap: nowrap;
+    font-size: 0.9rem;
     background-color: var(--color-light);
     color: var(--color-background-dark);
+    padding: 8px 20px;
+    margin: 0 20px 10px 0;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.3s;
 }
 
 .white-line {
     height: 2px;
     background-color: var(--color-line);
-    width: 90%;
+    width: 80%;
 }
 
 /* SEARCH */
@@ -96,7 +106,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 20px;
-    width: 90%;
+    width: 80%;
     margin: 100px 0;
 }
 
@@ -122,6 +132,12 @@
     width: 100%;
     margin-top: 5px;
     font-weight: 500;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .movie-info {
@@ -160,3 +176,5 @@
     justify-content: center;
     align-items: center;
 }
+
+/* SEARCH */
