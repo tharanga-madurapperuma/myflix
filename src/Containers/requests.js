@@ -9,6 +9,22 @@ const requestUniqueMovie = (id) => {
     return `${BASE_URL}/movie/${id}?api_key=${api_key}&language=en`;
 };
 
+const requestMoreMovieDetails = (id) => {
+    return `${BASE_URL}/movie/${id}?api_key=${api_key}&language=en&append_to_response=videos,images`;
+};
+
+const requestMoreSeriesDetails = (id) => {
+    return `${BASE_URL}/tv/${id}?api_key=${api_key}&language=en&append_to_response=videos,images`;
+};
+
+const movieReviews = (id) => {
+    return `${BASE_URL}/movie/${id}/reviews?api_key=${api_key}&language=en-US&page=1`;
+};
+
+const seriesReviews = (id) => {
+    return `${BASE_URL}/tv/${id}/reviews?api_key=${api_key}&language=en-US&page=1`;
+};
+
 const movieCategories = [
     {
         id: 0,
@@ -66,4 +82,8 @@ export {
     TVCategories,
     requestUniqueMovie,
     allGenreListTV,
+    requestMoreMovieDetails,
+    requestMoreSeriesDetails,
+    movieReviews,
+    seriesReviews,
 };
