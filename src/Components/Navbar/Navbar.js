@@ -1,7 +1,6 @@
 import React from "react";
 import "./Navbar.css";
 import { FaUserCircle } from "react-icons/fa";
-import { use } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = ({ name }) => {
@@ -17,7 +16,7 @@ const Navbar = ({ name }) => {
                     <li href="#">Home</li>
                     <li
                         onClick={() => {
-                            navigate("./movies");
+                            navigate("/movies");
                         }}
                     >
                         Movies
