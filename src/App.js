@@ -12,6 +12,7 @@ import ProtectedLayout from "./ProtectedLayout.js";
 
 
 import "./App.css";
+import TVSeries from "./Containers/TVSeries/TVSeries.js";
 
 function App() {
   return (
