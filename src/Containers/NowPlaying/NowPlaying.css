@@ -46,7 +46,7 @@
 }
 
 .swiper-pagination {
-    bottom: 25px !important;
+    bottom: 15px !important;
     z-index: 10; /* Adjust this value as needed to move the dots further down */
 }
 

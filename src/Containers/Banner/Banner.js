@@ -24,7 +24,7 @@ const Banner = () => {
         }
         fetchData();
     }, []);
-
+    console.log(uniqueMovie);
     return (
         <div className="banner__wrapper">
             <div

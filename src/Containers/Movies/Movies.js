@@ -1,62 +1,81 @@
 import React, { useEffect, useState } from "react";
+import Navbar from "../../Components/Navbar/Navbar";
 import "./Movies.css";
-import { SwiperSlide, Swiper } from "swiper/react";
-import "swiper/css";
-import "swiper/css/effect-coverflow";
-import "swiper/css/pagination";
-import { EffectCoverflow, Pagination } from "swiper/modules";
 import { requests } from "../requests";
 import axios from "axios";
 
 const Movies = () => {
-    const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original/";
-    const [trendingMovies, setTrendingMovies] = useState([]);
+    const [genreList, setGenreList] = useState();
+
+    const categories = [
+        {
+            name: "Trending",
+            className: "trending",
+        },
+        {
+            name: "Now Playing",
+            className: "nowPlaying",
+        },
+        {
+            name: "Top Rated",
+            className: "topRated",
+        },
+        {
+            name: "Popular",
+            className: "popular",
+        },
+        {
+            name: "Upcoming",
+            className: "upcoming",
+        },
+    ];
 
     useEffect(() => {
-        const fetchTrending = async () => {
-            const request = await axios.get(requests.fetchTrending);
-            setTrendingMovies(request.data.results);
-
-            return request;
+        const fetchGenres = async () => {
+            const request = await axios.get(requests.GenreList);
+            setGenreList(request.data.genres);
         };
 
-        fetchTrending();
+        fetchGenres();
     }, []);
 
     return (
-        <div className="movie">
-            <div className="movie-swiper">
-                <Swiper
-                    effect={"coverflow"}
-                    grabCursor={true}
-                    centeredSlides={true}
-                    slidesPerView={"auto"}
-                    loop={true}
-                    coverflowEffect={{
-                        rotate: 0,
-                        stretch: 0,
-                        depth: 200,
-                        modifier: 2.5,
-                        slideShadows: true,
-                    }}
-                    autoplay={{
-                        delay: 3000,
-                        disableOnInteraction: false,
-                    }}
-                    pagination={true}
-                    modules={[EffectCoverflow, Pagination]}
-                    className="mySwiper"
-                >
-                    {trendingMovies.map((movie) => (
-                        <SwiperSlide>
-                            <img
-                                src={IMAGE_BASE_URL + movie.poster_path}
-                                alt={movie.title}
-                                className="movie__poster"
-                            />
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
+        <div>
+            <div className="content__movie">
+                <Navbar />
+                <div className="movie-categories">
+                    {categories.map((category) => {
+                        return (
+                            <div
+                                className={`movie-categories_${category.className}`}
+                            >
+                                <p>{category.name}</p>
+                                <div
+                                    className={`${category.className}-line`}
+                                ></div>
+                            </div>
+                        );
+                    })}
+                </div>
+                <div>
+                    <hr />
+                </div>
+                <div className="movie-genres">
+                    {genreList &&
+                        genreList.map((genre) => {
+                            return (
+                                <div className="movie-genres__genre">
+                                    <p>{genre.name}</p>
+                                </div>
+                            );
+                        })}
+                </div>
+                <div className="movie-search"></div>
+                <div className="movie-list"></div>
+                <div>
+                    <hr />
+                </div>
+                <div className="movie-footer"></div>
             </div>
         </div>
     );

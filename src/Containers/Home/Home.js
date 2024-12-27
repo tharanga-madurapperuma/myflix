@@ -4,6 +4,8 @@ import Banner from "../Banner/Banner";
 import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import NowPlaying from "../NowPlaying/NowPlaying";
+import { requests } from "../requests";
+import axios from "axios";
 
 const Home = () => {
     const [loggedUser, setLoggedUser] = useState(null);
