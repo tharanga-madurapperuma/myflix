@@ -1,3 +1,4 @@
+
 import Home from './Containers/Home/Home.js';
 import Movies from './Containers/Movies/Movies.js';
 import AuthForm from './Containers/Auth/AuthForm.js';
