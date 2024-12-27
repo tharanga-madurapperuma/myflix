@@ -68,7 +68,7 @@ const MovieTrailer = ({ name }) => {
                     ))}
                 </div>
                 <div className="container-reviews">
-                    <h1>Reviews</h1>
+                    {reviews?.length == 0 ? <h1>No reviews</h1> : null}
                     {reviews?.map((review) => (
                         <div className="review">
                             <h3>{review.author}</h3>
