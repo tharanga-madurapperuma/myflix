@@ -1,5 +1,7 @@
-const api_key = "402ab982f69b1e475e37d7f951d28493";
-const BASE_URL = "https://api.themoviedb.org/3";
+const api_key = process.env.REACT_APP_API_KEY;
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+
+console.log(api_key);
 
 const adventure = `${BASE_URL}/discover/movie?api_key=${api_key}&with_genres=12`;
 const allGenreList = `${BASE_URL}/genre/movie/list?api_key=${api_key}&language=en-US`;
