@@ -1,4 +1,3 @@
-
 // App.jsx
 import React from "react";
 import Home from "./Containers/Home/Home.js";
@@ -10,35 +9,36 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./Context/AuthContext.js";
 import ProtectedLayout from "./ProtectedLayout.js";
 
-
 import "./App.css";
 import TVSeries from "./Containers/TVSeries/TVSeries.js";
 
 function App() {
-  return (
-    
-      <div className="App">
-        <Router>
-        <AuthProvider>
-          <Routes>
-            {/* Public routes */}
-            <Route path="auth/:mode" element={<AuthForm />} />
+    return (
+        <div className="App">
+            <Router>
+                <AuthProvider>
+                    <Routes>
+                        {/* Public routes */}
+                        <Route path="auth/:mode" element={<AuthForm />} />
 
-            {/* Protected routes */}
-            <Route element={<ProtectedLayout />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/movies" element={<Movies />} />
-              <Route path="/edit-profile" element={<EditProfile />} />
-            </Route>
+                        {/* Protected routes */}
+                        <Route element={<ProtectedLayout />}>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/movies" element={<Movies />} />
+                            <Route path="/series" element={<TVSeries />} />
+                            <Route
+                                path="/edit-profile"
+                                element={<EditProfile />}
+                            />
+                        </Route>
 
-            {/* Catch all route */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          </AuthProvider>
-        </Router>
-      </div>
-    
-  );
+                        {/* Catch all route */}
+                        <Route path="*" element={<NotFound />} />
+                    </Routes>
+                </AuthProvider>
+            </Router>
+        </div>
+    );
 }
 
 export default App;
