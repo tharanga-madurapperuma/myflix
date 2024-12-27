@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../Components/Navbar/Navbar";
 import "./TVSeries.css";
-import { allGenreListTV, TVCategories } from "../requests";
+import { allGenreListTV, searchSeries, TVCategories } from "../requests";
 import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
@@ -14,6 +14,7 @@ const TVSeries = ({ name }) => {
     const [galleryTVSeries, setGalleryTVSeries] = useState();
     const [activeCategory, setActiveCategory] = useState(0);
     const [activeGenres, setActiveGenres] = useState([]);
+    const [searchText, setSearchText] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -62,6 +63,21 @@ const TVSeries = ({ name }) => {
             fetchGalleryTVSeries();
         }
     }, [activeGenres]);
+
+    const fetchSeries = async () => {
+        const request = await axios.get(searchSeries(searchText));
+        if (searchText === "") {
+            const getSeries = async () => {
+                const request = await axios.get(
+                    TVCategories[activeCategory].request
+                );
+                setGalleryTVSeries(request.data.results);
+            };
+            getSeries();
+        } else {
+            setGalleryTVSeries(request.data.results);
+        }
+    };
 
     return (
         <div>
@@ -141,11 +157,13 @@ const TVSeries = ({ name }) => {
                         className="search-input"
                         type="text"
                         placeholder="Search TV Series"
+                        onChange={(e) => setSearchText(e.target.value)}
                     />
                     <input
                         className="search-button"
                         type="submit"
                         value="Search"
+                        onClick={fetchSeries}
                     />
                 </div>
                 <div className="tvSeries-list">

@@ -46,27 +46,30 @@ const MovieTrailer = ({ name }) => {
                         </div>
                     </div>
                 </div>
-                <div
-                    className={
-                        movie?.videos.results.length == 0
-                            ? "trailer-empty"
-                            : "container-video"
-                    }
-                >
-                    {movie?.videos.results.map((video) => (
-                        <div className="trailer">
-                            <iframe
-                                width="100%"
-                                height="100%"
-                                src={`https://www.youtube.com/embed/${video?.key}`}
-                                title="YouTube video player"
-                                frameBorder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                            ></iframe>
-                        </div>
-                    ))}
+                <div className="container-outer">
+                    <div
+                        className={
+                            movie?.videos.results.length == 0
+                                ? "trailer-empty"
+                                : "container-video"
+                        }
+                    >
+                        {movie?.videos.results.map((video) => (
+                            <div className="trailer">
+                                <iframe
+                                    width="700px"
+                                    height="100%"
+                                    src={`https://www.youtube.com/embed/${video?.key}`}
+                                    title="YouTube video player"
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowFullScreen
+                                ></iframe>
+                            </div>
+                        ))}
+                    </div>
                 </div>
+
                 <div className="container-reviews">
                     {reviews?.length == 0 ? <h1>No reviews</h1> : null}
                     {reviews?.map((review) => (
