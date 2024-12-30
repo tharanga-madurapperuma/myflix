@@ -5,11 +5,11 @@ import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import NowPlaying from "../NowPlaying/NowPlaying";
 
-const Home = ({ name }) => {
+const Home = () => {
     return (
         <div className="home">
             <div className="home__firstSection">
-                <Navbar name={name} />
+                <Navbar  />
                 <Banner />
             </div>
             <div className="home__secondSection">

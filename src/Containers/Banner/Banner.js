@@ -11,20 +11,31 @@ const Banner = () => {
 
     useEffect(() => {
         async function fetchData() {
-            const request = await axios.get(adventure);
-            const fetchedMovie =
-                request.data.results[
-                    Math.floor(Math.random() * request.data.results.length - 1)
-                ];
-            setMovie(fetchedMovie);
-            const uniqueRequest = await axios.get(
-                requestUniqueMovie(fetchedMovie?.id)
-            );
-            setUniqueMovie(uniqueRequest?.data);
+            try {
+                const request = await axios.get(adventure);
+                const fetchedMovie =
+                    request.data.results[
+                        Math.floor(Math.random() * request.data.results.length)
+                    ];
+    
+                // Make sure the fetched movie has a valid id before making the second request
+                if (fetchedMovie?.id) {
+                    setMovie(fetchedMovie);
+                    const uniqueRequest = await axios.get(
+                        requestUniqueMovie(fetchedMovie.id)
+                    );
+                    setUniqueMovie(uniqueRequest?.data);
+                } else {
+                    console.error("Movie ID is undefined or invalid");
+                }
+            } catch (error) {
+                console.error("Error fetching movie data:", error);
+            }
         }
         fetchData();
     }, []);
-    console.log(process.env.API_KEY);
+    
+
     return (
         <div className="banner__wrapper">
             <div
@@ -46,8 +57,8 @@ const Banner = () => {
                 <h3>{movie?.vote_average}</h3>
                 <h4>Duration: {uniqueMovie.runtime} min</h4>
                 <h5>
-                    {uniqueMovie.genres?.map((genre) => (
-                        <span> | {genre.name}</span>
+                    {uniqueMovie.genres?.map((genre,index) => (
+                        <span key={index}> | {genre.name}</span>
                     ))}
                 </h5>
                 <h2>{movie?.title}</h2>

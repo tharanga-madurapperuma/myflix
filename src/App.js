@@ -11,81 +11,35 @@ import ProtectedLayout from "./ProtectedLayout.js";
 
 import "./App.css";
 import TVSeries from "./Containers/TVSeries/TVSeries.js";
-import { getUserDetails } from "./Api/api.js";
 import MovieTrailer from "./Containers/MovierTrailer/MovieTrailer.js";
 import SeriesTrailer from "./Containers/SeriesTrailer/SeriesTrailer.js";
 
 function App() {
-    const [loggedUser, setLoggedUser] = useState(null);
+  return (
+    <div className="App">
+      <Router>
+        <AuthProvider>
+          <Routes>
+            {/* Public routes */}
+            <Route path="auth/:mode" element={<AuthForm />} />
 
-    useEffect(() => {
-        const getUser = async () => {
-            try {
-                const response = await getUserDetails(); // Fetch user details from the API
-                const userData = response.user;
-                setLoggedUser(userData);
-            } catch (error) {
-                console.error("Error fetching user details:", error);
-            }
-        };
-        getUser();
-    }, []);
+            {/* Protected routes */}
+            <Route element={<ProtectedLayout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/movies" element={<Movies />} />
+              <Route path="/series" element={<TVSeries />} />
+              <Route path="/movieTrailer/:id" element={<MovieTrailer />} />
+              <Route path="/seriesTrailer/:id" element={<SeriesTrailer />} />
+              <Route path="/edit-profile" element={<EditProfile />} />
+            </Route>
 
-    return (
-        <div className="App">
-            <Router>
-                <AuthProvider>
-                    <Routes>
-                        {/* Public routes */}
-                        <Route path="auth/:mode" element={<AuthForm />} />
-
-                        {/* Protected routes */}
-                        <Route element={<ProtectedLayout />}>
-                            <Route
-                                path="/"
-                                element={<Home name={loggedUser?.first_name} />}
-                            />
-                            <Route
-                                path="/movies"
-                                element={
-                                    <Movies name={loggedUser?.first_name} />
-                                }
-                            />
-                            <Route
-                                path="/series"
-                                element={
-                                    <TVSeries name={loggedUser?.first_name} />
-                                }
-                            />
-                            <Route
-                                path="/movieTrailer/:id"
-                                element={
-                                    <MovieTrailer
-                                        name={loggedUser?.first_name}
-                                    />
-                                }
-                            />
-                            <Route
-                                path="/seriesTrailer/:id"
-                                element={
-                                    <SeriesTrailer
-                                        name={loggedUser?.first_name}
-                                    />
-                                }
-                            />
-                            <Route
-                                path="/edit-profile"
-                                element={<EditProfile />}
-                            />
-                        </Route>
-
-                        {/* Catch all route */}
-                        <Route path="*" element={<NotFound />} />
-                    </Routes>
-                </AuthProvider>
-            </Router>
-        </div>
-    );
+            {/* Catch all route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
+      </Router>
+    </div>
+  );
 }
 
 export default App;

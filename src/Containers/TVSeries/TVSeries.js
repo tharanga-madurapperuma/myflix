@@ -8,7 +8,7 @@ import { Autoplay } from "swiper/modules";
 import Footer from "../Footer/Footer";
 import { useNavigate } from "react-router-dom";
 
-const TVSeries = ({ name }) => {
+const TVSeries = () => {
     const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original/";
     const [genreList, setGenreList] = useState();
     const [galleryTVSeries, setGalleryTVSeries] = useState();
@@ -82,7 +82,7 @@ const TVSeries = ({ name }) => {
     return (
         <div>
             <div className="content__tvSeries">
-                <Navbar name={name} />
+                <Navbar/>
                 <div className="tvSeries-categories">
                     {TVCategories.map((category) => {
                         return (

@@ -1,6 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect,useContext } from "react";
 import { editUser, getUserDetails } from "../../../Api/api"; // Assume `getUserDetails` fetches user details
 import Navbar from "../../../Components/Navbar/Navbar";
+import AuthContext from "../../../Context/AuthContext";
 
 import "./edit.css";
 
@@ -17,28 +18,21 @@ const EditProfile = () => {
     const [lastname, setLastname] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [message, setMessage] = useState(null);
+    const { user,setUser } = useContext(AuthContext);
 
-    // Fetch user details on component load
-    useEffect(() => {
-        const fetchUserDetails = async () => {
-            setIsLoading(true);
-            try {
-                const response = await getUserDetails(); // Fetch user details from the API
-                const userData = response.user; // Access the `user` object from the response
-
-                setEmail(userData.email);
-                setFirstname(userData.first_name);
-                setLastname(userData.last_name);
-            } catch (error) {
-                console.error("Error fetching user details:", error);
-                setMessage("Failed to load user details. Please try again.");
-            } finally {
+     useEffect(() => {
+        setIsLoading(true);
+            if (user) {
+                setEmail(user.email);
+                setFirstname(user.first_name);
+                setLastname(user.last_name);
                 setIsLoading(false);
-            }
-        };
+            } else {
 
-        fetchUserDetails();
-    }, []);
+                console.log("User is Loading");
+            }
+        
+        }, [user]);
 
     const handleEditUser = async (e) => {
         e.preventDefault();
@@ -50,7 +44,12 @@ const EditProfile = () => {
                 lastname,
                 password
             );
+         
             setMessage("User updated successfully");
+            setUser(prevUser => ({
+                ...prevUser, 
+                first_name: firstname, 
+            }));
             console.log("User updated successfully:", updatedUser);
         } catch (error) {
             setMessage("An error occurred. Please try again.");

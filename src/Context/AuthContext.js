@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
   const fetchUserData = async () => {
     try {
       const data = await getUserDetails(); 
-      console.log(data);
+     
       setUser(data.user); // Set the user data in state
     } catch (error) {
       console.error('Failed to fetch user data:', error);
@@ -62,6 +62,7 @@ export const AuthProvider = ({ children }) => {
       value={{
         authToken,
         user,
+        setUser,
         login,
         signup,
         logout,

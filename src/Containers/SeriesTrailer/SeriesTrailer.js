@@ -5,7 +5,7 @@ import axios from "axios";
 import { seriesReviews, requestMoreSeriesDetails } from "../requests";
 import Footer from "../Footer/Footer";
 
-const SeriesTrailer = ({ name }) => {
+const SeriesTrailer = () => {
     const id = window.location.pathname.split("/")[2];
     const [series, setSeries] = useState();
     const [reviews, setReviews] = useState();
@@ -28,7 +28,7 @@ const SeriesTrailer = ({ name }) => {
     console.log(reviews);
     return (
         <div>
-            <Navbar name={name} />
+            <Navbar />
             <div className="trailer-container">
                 <div className="trailer-details">
                     <div className="trailer-details__image">

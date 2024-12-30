@@ -5,7 +5,7 @@ import axios from "axios";
 import { movieReviews, requestMoreMovieDetails } from "../requests";
 import Footer from "../Footer/Footer";
 
-const MovieTrailer = ({ name }) => {
+const MovieTrailer = () => {
     const id = window.location.pathname.split("/")[2];
     const [movie, setMovie] = useState();
     const [reviews, setReviews] = useState();
@@ -28,7 +28,7 @@ const MovieTrailer = ({ name }) => {
     console.log(reviews);
     return (
         <div>
-            <Navbar name={name} />
+            <Navbar />
             <div className="trailer-container">
                 <div className="trailer-details">
                     <div className="trailer-details__image">

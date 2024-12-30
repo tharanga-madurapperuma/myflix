@@ -48,8 +48,8 @@ const NowPlaying = () => {
                     modules={[EffectCoverflow, Pagination, Autoplay]}
                     className="mySwiper"
                 >
-                    {trendingMovies.map((movie) => (
-                        <SwiperSlide>
+                    {trendingMovies.map((movie,index) => (
+                        <SwiperSlide key={index}>
                             <img
                                 src={IMAGE_BASE_URL + movie.poster_path}
                                 alt={movie.title}

@@ -4,14 +4,16 @@ import "./Navbar.css";
 import { FaUserCircle } from "react-icons/fa";
 import AuthContext from "../../Context/AuthContext";
 
-const Navbar = ({ name }) => {
+const Navbar = () => {
     const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef(null); // Ref to track the menu
-    const { logout } = useContext(AuthContext);
+    const { logout,user } = useContext(AuthContext);
+    const [loggedUser, setLoggedUser] = useState("User");
     const toggleMenu = () => {
         setMenuOpen(!menuOpen); // Toggle the menu open/close
     };
+
 
     const handleLogout = () => {
         logout();
@@ -24,6 +26,16 @@ const Navbar = ({ name }) => {
         // Add navigation or logic for editing profile
     };
 
+    useEffect(() => {
+        if (user) {
+            setLoggedUser(user.first_name);
+        } else {
+            console.log("User is not available");
+        }
+        
+        
+        // setLoggedUser(user.id);
+    }, [user]);
     // Close the menu when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -62,7 +74,8 @@ const Navbar = ({ name }) => {
                     ref={menuRef}
                 >
                     <FaUserCircle className="user-icon" />
-                    <p>{name}</p>
+                    {<p>{loggedUser} </p>}
+            
                 </div>
                 {menuOpen && (
                     <div className="user-menu" ref={menuRef}>

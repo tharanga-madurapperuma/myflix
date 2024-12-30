@@ -8,7 +8,7 @@ import { Autoplay } from "swiper/modules";
 import Footer from "../Footer/Footer";
 import { useNavigate } from "react-router-dom";
 
-const Movies = ({ name }) => {
+const Movies = () => {
     const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original/";
     const [genreList, setGenreList] = useState();
     const [galleryMovies, setGalleryMovies] = useState();
@@ -80,7 +80,7 @@ const Movies = ({ name }) => {
     return (
         <div>
             <div className="content__movie">
-                <Navbar name={name} />
+                <Navbar />
                 <div className="movie-categories">
                     {movieCategories.map((category) => {
                         return (
