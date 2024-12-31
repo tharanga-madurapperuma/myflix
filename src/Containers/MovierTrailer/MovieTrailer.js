@@ -4,16 +4,27 @@ import Navbar from "../../Components/Navbar/Navbar";
 import axios from "axios";
 import { movieReviews, requestMoreMovieDetails } from "../requests";
 import Footer from "../Footer/Footer";
+import Loading from "../../Components/Loading/Loading";
 
 const MovieTrailer = () => {
     const id = window.location.pathname.split("/")[2];
     const [movie, setMovie] = useState();
     const [reviews, setReviews] = useState();
+    const [isLoading, setIsLoading] = useState(false);
+    const [loadedCount, setLoadedCount] = useState(0);
 
     useEffect(() => {
+        setIsLoading(true);
+        setLoadedCount(0);
         const fetchMovie = async () => {
-            const response = await axios.get(requestMoreMovieDetails(id));
-            setMovie(response.data);
+            try {
+                const response = await axios.get(requestMoreMovieDetails(id));
+                setMovie(response.data);
+            } catch (error) {
+                console.error("Error fetching movie data:", error);
+            } finally {
+                setIsLoading(false);
+            }
         };
 
         const getReviews = async () => {
@@ -24,13 +35,29 @@ const MovieTrailer = () => {
         fetchMovie();
         getReviews();
     }, []);
-    console.log(movie);
-    console.log(reviews);
+
+    useEffect(() => {
+        if (loadedCount === movie?.videos.results.length) {
+            setIsLoading(false);
+        }
+    }, [loadedCount]);
+
+    const increaseCount = () => {
+        setLoadedCount((prevCount) => prevCount + 1);
+    };
     return (
         <div>
+            {isLoading && <Loading />}
             <Navbar />
             <div className="trailer-container">
-                <div className="trailer-details">
+                <div
+                    className="trailer-details"
+                    onLoad={() => {
+                        if (movie?.videos.results.length >= 0) {
+                            setIsLoading(true);
+                        }
+                    }}
+                >
                     <div className="trailer-details__image">
                         <img
                             src={`https://image.tmdb.org/t/p/original/${movie?.poster_path}`}
@@ -46,12 +73,19 @@ const MovieTrailer = () => {
                         </div>
                     </div>
                 </div>
+                <div className="trailer-add-my-movies">
+                    <button>Add to Watch</button>
+                    <button>Add to Watching</button>
+                    <button>Add to Watched</button>
+                </div>
                 <div className="container-outer">
                     <div
                         className={
                             movie?.videos.results.length == 0
                                 ? "trailer-empty"
-                                : "container-video"
+                                : movie?.videos.results.length > 2
+                                ? "container-video"
+                                : "container-video-less-two"
                         }
                     >
                         {movie?.videos.results.map((video) => (
@@ -64,6 +98,8 @@ const MovieTrailer = () => {
                                     frameBorder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowFullScreen
+                                    onLoad={increaseCount}
+                                    onError={increaseCount}
                                 ></iframe>
                             </div>
                         ))}
