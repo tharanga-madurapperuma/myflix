@@ -7,6 +7,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import Footer from "../Footer/Footer";
 import { useNavigate } from "react-router-dom";
+import Loading from "../../Components/Loading/Loading";
 
 const Movies = () => {
     const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original/";
@@ -15,10 +16,13 @@ const Movies = () => {
     const [activeCategory, setActiveCategory] = useState(0);
     const [activeGenres, setActiveGenres] = useState([]);
     const [searchText, setSearchText] = useState("");
+    const [loadedCount, setLoadedCount] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchGenres = async () => {
+            setIsLoading(true);
             const request = await axios.get(allGenreList);
             setGenreList(request.data.genres);
         };
@@ -33,16 +37,22 @@ const Movies = () => {
     }, []);
 
     useEffect(() => {
-        const fetchMovieCategory = async (category) => {
-            const request = await axios.get(movieCategories[category].request);
-            setGalleryMovies(request.data.results);
+        const fetchMovieCategory = async () => {
+            setIsLoading(true);
+            setLoadedCount(0);
+            try {
+                const request = await axios.get(
+                    movieCategories[activeCategory].request
+                );
+                setGalleryMovies(request.data.results);
+            } catch (error) {
+                console.error("Error fetching movies:", error);
+            } finally {
+                setIsLoading(false);
+            }
         };
 
-        for (let i = 0; i < 5; i++) {
-            if (activeCategory === i) {
-                fetchMovieCategory(i);
-            }
-        }
+        fetchMovieCategory();
     }, [activeCategory]);
 
     useEffect(() => {
@@ -63,6 +73,8 @@ const Movies = () => {
     }, [activeGenres]);
 
     const fetchMovie = async () => {
+        setIsLoading(true);
+        setLoadedCount(0);
         const request = await axios.get(searchMovie(searchText));
         if (searchText === "") {
             const getMovies = async () => {
@@ -77,8 +89,19 @@ const Movies = () => {
         }
     };
 
+    const increaseCount = () => {
+        setLoadedCount((prevCount) => prevCount + 1);
+    };
+
+    useEffect(() => {
+        if (loadedCount === galleryMovies?.length) {
+            setIsLoading(false);
+        }
+    }, [loadedCount]);
+
     return (
         <div>
+            {isLoading && <Loading />}
             <div className="content__movie">
                 <Navbar />
                 <div className="movie-categories">
@@ -156,6 +179,11 @@ const Movies = () => {
                         type="text"
                         placeholder="Search Movie"
                         onChange={(e) => setSearchText(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                fetchMovie();
+                            }
+                        }}
                     />
                     <input
                         className="search-button"
@@ -177,6 +205,8 @@ const Movies = () => {
                                     <img
                                         src={`${IMAGE_BASE_URL}${movie.poster_path}`}
                                         alt={movie.title}
+                                        onLoad={increaseCount}
+                                        onError={increaseCount}
                                     />
                                     <div className="movie-title">
                                         {movie.title}

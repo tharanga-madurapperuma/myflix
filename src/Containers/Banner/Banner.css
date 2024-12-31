@@ -3,6 +3,7 @@
     height: 89vh;
     display: flex;
     align-items: center;
+    margin-top: 80px;
 }
 
 .banner__background {

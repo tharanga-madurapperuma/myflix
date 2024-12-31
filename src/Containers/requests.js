@@ -1,7 +1,6 @@
 const API_KEY = process.env.REACT_APP_API_KEY;
 const BASE_URL = process.env.REACT_APP_BASE_URL;
 
-
 const adventure = `${BASE_URL}/discover/movie?api_key=${API_KEY}&with_genres=12`;
 const allGenreList = `${BASE_URL}/genre/movie/list?api_key=${API_KEY}&language=en-US`;
 const allGenreListTV = `${BASE_URL}/genre/tv/list?api_key=${API_KEY}&language=en-US`;
@@ -60,6 +59,10 @@ const movieCategories = [
         request: `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1`,
     },
 ];
+
+const myMovieCategories = (category) => {
+    return `movie/${category}`;
+};
 
 const TVCategories = [
     {

@@ -1,120 +1,120 @@
 body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background-color: #1a1a1a;
-  color: #fff;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #1a1a1a;
+    color: #fff;
 }
 
 .login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
-.auth-form{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  min-height:350px ;
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    min-height: 350px;
 }
 
 .login-card {
-  background-color: #2b2b2b;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  text-align: center;
-  width: 300px;
+    background-color: #2b2b2b;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    width: 300px;
 }
 
 .login-card h2 {
-  margin-top: 30px;
-  color: #fff;
+    margin-top: 30px;
+    color: #fff;
 }
 
 .login-card input {
-  width: 80%;
-  padding: 10px;
-  margin: 10px 0;
-  border: none;
-  border-radius: 4px;
-  background-color: #444;
-  color: #fff;
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 4px;
+    background-color: #444;
+    color: #fff;
 }
 
 .login-card input::placeholder {
-  color: #aaa;
+    color: #aaa;
 }
 
 .login-button {
-  width: 50%;
-  padding: 10px;
-  background-color: #a14fca;
-  border: none;
-  border-radius: 4px;
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s;
+    width: 50%;
+    padding: 10px;
+    background-color: #a14fca;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .login-button:hover {
-  background-color: #912abb;
+    background-color: #912abb;
 }
 
 .loading-spinner {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.8);
-  z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
 }
 
 .switch-container {
-  margin-top: 1rem;
-  font-size: 0.9rem;
+    margin-top: 1rem;
+    font-size: 0.9rem;
 }
 
 .auth-switch {
-  color: #007bff;
-  cursor: pointer;
-  text-decoration: underline;
-  margin-left: 0.5rem;
+    color: #007bff;
+    cursor: pointer;
+    text-decoration: underline;
+    margin-left: 0.5rem;
 }
 
 .auth-switch:hover {
-  color: #0056b3;
+    color: #0056b3;
 }
 
 .error-message {
-  color: #d9534f;
-  font-size: 0.9rem;
-  margin-top: 1rem;
+    color: #d9534f;
+    font-size: 0.9rem;
+    margin-top: 1rem;
 }
 
 .spinner {
-  width: 50px;
-  height: 50px;
-  border: 6px solid #a14fca;
-  border-top: 6px solid transparent;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
+    width: 50px;
+    height: 50px;
+    border: 6px solid #a14fca;
+    border-top: 6px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
