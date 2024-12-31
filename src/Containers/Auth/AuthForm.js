@@ -7,13 +7,12 @@ import NotFound from "../../Components/NotFound/NotFound";
 import "./authform.css";
 
 const LoadingSpinner = () => (
-    <div className="loading-spinner">
-        <div className="spinner"></div>
-    </div>
+  <div className="loading-spinner">
+    <div className="spinner"></div>
+  </div>
 );
 
 const AuthForm = () => {
-
   const { mode } = useParams();
   const { login, signup } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -24,6 +23,9 @@ const AuthForm = () => {
   const [lastname, setLastname] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  
+  // State for validation errors
+  const [validationErrors, setValidationErrors] = useState({});
 
   useEffect(() => {
     setError(null);
@@ -40,8 +42,36 @@ const AuthForm = () => {
     return <NotFound />;
   }
 
+
+  // Validation functions
+  const validateEmail = (email) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? null : "Invalid email format.";
+
+  const validatePassword = (password) =>
+    password.length >= 6
+      ? null
+      : "Password must be at least 6 characters long.";
+
+  const validateRequiredField = (value, fieldName) =>
+    value ? null : `${fieldName} is required.`;
+
+  const validateForm = () => {
+    const errors = {};
+    errors.email = validateEmail(email);
+    errors.password = validatePassword(password);
+    if (currentMode === "signup") {
+      errors.firstname = validateRequiredField(firstname, "First Name");
+      errors.lastname = validateRequiredField(lastname, "Last Name");
+    }
+    setValidationErrors(errors);
+    return Object.values(errors).every((error) => !error); // Return true if no errors
+  };
+
   const handleAuth = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
+    
     setIsLoading(true);
 
     try {
@@ -55,7 +85,7 @@ const AuthForm = () => {
 
       // Use the context's login or signup methods based on the mode
       if (mode === "signup") {
-        signup(response.token); // Provided by AuthContext
+        signup(); // Provided by AuthContext
       } else {
         login(response.token); // Provided by AuthContext
       }
@@ -66,7 +96,9 @@ const AuthForm = () => {
       setFirstname("");
       setLastname("");
     } catch (error) {
-      setError("An error occurred. Please try again.");
+      setError(
+        error.response?.data.error || "An error occurred. Please try again."
+      );
       console.error(`Error during ${mode}`, error);
     } finally {
       setIsLoading(false);
@@ -89,6 +121,7 @@ const AuthForm = () => {
                   onChange={(e) => setFirstname(e.target.value)}
                   required
                 />
+                
                 <input
                   type="text"
                   placeholder="Last Name"
@@ -105,6 +138,7 @@ const AuthForm = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
+            {validationErrors.email && <p className="error-message">{validationErrors.email}</p>}
             <input
               type="password"
               placeholder="Password"
@@ -112,6 +146,7 @@ const AuthForm = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
+            {validationErrors.password && <p className="error-message-small">{validationErrors.password}</p>}
           </div>
           <button type="submit" className="login-button">
             {currentMode === "login" ? "Log In" : "Sign Up"}
@@ -142,8 +177,6 @@ const AuthForm = () => {
       </div>
     </div>
   );
-
-   
 };
 
 export default AuthForm;

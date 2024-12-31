@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:5000/api';
 
 // Utility function to get Authorization headers
 const getAuthHeaders = () => {
@@ -22,9 +22,10 @@ const apiRequest = async (method, endpoint, payload = {}) => {
       headers,
       data: payload, // For PUT, POST requests
     });
+    console.log('API request successful:', response.data);
     return response.data;
   } catch (error) {
-    console.error('API request error:', error.response?.data || error.message);
+    console.log(error.response?.data || error.message);
     throw error; // Propagate the error to be handled in the calling function
   }
 };

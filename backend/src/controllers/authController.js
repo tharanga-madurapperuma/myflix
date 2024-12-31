@@ -70,6 +70,7 @@ const editUserController = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
+
     // Hash password if it's part of updates
     if (updates.password) {
       updates.password = await hashPassword(updates.password);
