@@ -8,12 +8,12 @@ const Navbar = () => {
     const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
     const menuRef = useRef(null); // Ref to track the menu
-    const { logout,user } = useContext(AuthContext);
+    const { logout, user } = useContext(AuthContext);
     const [loggedUser, setLoggedUser] = useState("User");
+    const [opacity, setOpacity] = useState(0.2);
     const toggleMenu = () => {
         setMenuOpen(!menuOpen); // Toggle the menu open/close
     };
-
 
     const handleLogout = () => {
         logout();
@@ -32,8 +32,7 @@ const Navbar = () => {
         } else {
             console.log("User is not available");
         }
-        
-        
+
         // setLoggedUser(user.id);
     }, [user]);
     // Close the menu when clicking outside
@@ -51,8 +50,39 @@ const Navbar = () => {
         };
     }, []);
 
+    // This useEffect is for change the opacity of the Navbar
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollY = window.scrollY;
+            const maxOpacity = 0.8; // Maximum opacity value
+            const minOpacity = 0.2; // Minimum opacity value
+            const scrollThreshold = 500; // Scroll threshold to reach full opacity
+
+            // Calculate opacity based on scroll position
+            const newOpacity = Math.min(
+                maxOpacity,
+                Math.max(minOpacity, scrollY / scrollThreshold)
+            );
+            setOpacity(newOpacity);
+        };
+
+        // Add scroll event listener
+        window.addEventListener("scroll", handleScroll);
+
+        // Cleanup event listener on component unmount
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, []);
+
     return (
-        <div className="navBar">
+        <div
+            className="navBar"
+            style={{
+                backgroundColor: `rgba(0, 0, 0, ${opacity})`,
+                transition: "background-color 0.5s ease",
+            }}
+        >
             <div className="navBar-container">
                 <div className="navBar__logo">
                     <h1>MYFLIX</h1>
@@ -67,6 +97,9 @@ const Navbar = () => {
                     <li>
                         <Link to="/series">Series</Link>
                     </li>
+                    <li>
+                        <Link to="/myMovies">My Movies</Link>
+                    </li>
                 </ul>
                 <div
                     className="navBar__user"
@@ -75,7 +108,6 @@ const Navbar = () => {
                 >
                     <FaUserCircle className="user-icon" />
                     {<p>{loggedUser} </p>}
-            
                 </div>
                 {menuOpen && (
                     <div className="user-menu" ref={menuRef}>

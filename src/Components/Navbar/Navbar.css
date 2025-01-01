@@ -6,6 +6,7 @@
     align-items: center;
     z-index: 2;
     background-color: var(--color-background-navbar);
+    position: fixed;
 }
 
 .navBar-container {
@@ -26,7 +27,7 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    display: flex; 
+    display: flex;
 }
 
 .navBar-container ul li {
@@ -47,7 +48,6 @@
     color: var(--color-light);
     cursor: pointer;
 }
-
 
 .navBar__user {
     color: var(--color-text-normal);
@@ -92,7 +92,7 @@
 
 /* Adjustments for hover effect */
 .navBar__user:hover p {
-    color: #f5f5f5
+    color: #f5f5f5;
 }
 
 @media (max-width: 768px) {
@@ -113,4 +113,3 @@
         font-size: 0.9rem;
     }
 }
-

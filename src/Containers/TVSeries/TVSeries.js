@@ -7,6 +7,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import Footer from "../Footer/Footer";
 import { useNavigate } from "react-router-dom";
+import Loading from "../../Components/Loading/Loading";
 
 const TVSeries = () => {
     const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original/";
@@ -15,9 +16,13 @@ const TVSeries = () => {
     const [activeCategory, setActiveCategory] = useState(0);
     const [activeGenres, setActiveGenres] = useState([]);
     const [searchText, setSearchText] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [loadedCount, setLoadedCount] = useState(0);
     const navigate = useNavigate();
 
     useEffect(() => {
+        setIsLoading(true);
+        setLoadedCount(0);
         const fetchGenres = async () => {
             const request = await axios.get(allGenreListTV);
             setGenreList(request.data.genres);
@@ -31,18 +36,23 @@ const TVSeries = () => {
         fetchGenres();
         fetchGalleryTVSeries();
     }, []);
-    console.log(galleryTVSeries);
+
     useEffect(() => {
         const fetchTVSeriesCategory = async (category) => {
-            const request = await axios.get(TVCategories[category].request);
-            setGalleryTVSeries(request.data.results);
-        };
-
-        for (let i = 0; i < 5; i++) {
-            if (activeCategory === i) {
-                fetchTVSeriesCategory(i);
+            setIsLoading(true);
+            setLoadedCount(0);
+            try {
+                const request = await axios.get(
+                    TVCategories[activeCategory].request
+                );
+                setGalleryTVSeries(request.data.results);
+            } catch (error) {
+                console.error("Error fetching TV series:", error);
+            } finally {
+                setIsLoading(false);
             }
-        }
+        };
+        fetchTVSeriesCategory();
     }, [activeCategory]);
 
     useEffect(() => {
@@ -65,6 +75,8 @@ const TVSeries = () => {
     }, [activeGenres]);
 
     const fetchSeries = async () => {
+        setIsLoading(true);
+        setLoadedCount(0);
         const request = await axios.get(searchSeries(searchText));
         if (searchText === "") {
             const getSeries = async () => {
@@ -79,10 +91,21 @@ const TVSeries = () => {
         }
     };
 
+    const increaseCount = () => {
+        setLoadedCount((prevCount) => prevCount + 1);
+    };
+
+    useEffect(() => {
+        if (loadedCount === galleryTVSeries?.length) {
+            setIsLoading(false);
+        }
+    }, [loadedCount]);
+
     return (
         <div>
+            {isLoading && <Loading />}
             <div className="content__tvSeries">
-                <Navbar/>
+                <Navbar />
                 <div className="tvSeries-categories">
                     {TVCategories.map((category) => {
                         return (
@@ -158,6 +181,11 @@ const TVSeries = () => {
                         type="text"
                         placeholder="Search TV Series"
                         onChange={(e) => setSearchText(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                fetchSeries();
+                            }
+                        }}
                     />
                     <input
                         className="search-button"
@@ -181,6 +209,8 @@ const TVSeries = () => {
                                     <img
                                         src={`${IMAGE_BASE_URL}${tvSeries.poster_path}`}
                                         alt={tvSeries.name}
+                                        onLoad={increaseCount}
+                                        onError={increaseCount}
                                     />
                                     <div className="tvSeries-title">
                                         {tvSeries.name}
