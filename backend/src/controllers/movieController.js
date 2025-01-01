@@ -62,13 +62,14 @@ const getMoviesByStatus = async (req, res) => {
 
 // Insert or update a movie status
 const upsertMovieStatus = async (req, res) => {
+  
     const { userId, movieId, status } = req.body;
   
     try {
       if (!userId || !movieId || !status) {
         return res.status(400).json({ error: "userId, movieId, and status are required" });
       }
-      console.log(userId, movieId, status+"controller");
+
       const result = await MovieStatus.upsdateInsertStatus(userId, movieId, status);
       res.status(200).json(result);
     } catch (error) {

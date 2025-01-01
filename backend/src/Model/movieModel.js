@@ -20,7 +20,6 @@ const MovieStatus = {
 
   // Insert or update movie status
   upsdateInsertStatus: async (userId, movieId, status) => {
-    console.log(userId, movieId, status);
     try {
       const query = `
         INSERT INTO moviestatus (user_id, movie_id, status)
@@ -34,7 +33,7 @@ const MovieStatus = {
       console.error(`Error updating movie status for userId: ${userId}, movieId: ${movieId}`, error);
       throw new Error("Failed to update movie status. Please try again later.");
     }
-  },
+  }
 };
 
 module.exports = MovieStatus;
