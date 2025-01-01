@@ -3,6 +3,7 @@ const pool = require("../config/db");
 const MovieStatus = {
   // Fetch movies by user ID and status
   getMoviesByStatus: async (userId, status) => {
+    console.log(userId, status);
     try {
       const query = `
         SELECT movie_id 

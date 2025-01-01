@@ -35,23 +35,30 @@ const getMedia = async (req, res) => {
 // Get movies by status
 
 const getMoviesByStatus = async (req, res) => {
-  const userId = parseInt(req.body.userId, 10);
+  const userId = parseInt(req.query.id, 10); // Get userId from query parameters
+  // Validate userId
+  if (!userId) {
+    return res.status(400).json({ error: 'userId is required and must be a valid number.' });
+  }
 
   try {
-    const watching = await MovieStatus.getMoviesByStatus(userId, 'watching');
-    const watched = await MovieStatus.getMoviesByStatus(userId, 'watched');
-    const toWatch = await MovieStatus.getMoviesByStatus(userId, 'to watch');
+    // Fetch movie statuses
+    const watching = await MovieStatus.getMoviesByStatus(userId, 'watching') || [];
+    const watched = await MovieStatus.getMoviesByStatus(userId, 'watched') || [];
+    const toWatch = await MovieStatus.getMoviesByStatus(userId, 'to watch') || [];
 
+    // Send response
     res.json({
       watching,
       watched,
       toWatch,
     });
   } catch (error) {
-    console.error(error);
+    console.error(`Error while fetching movie statuses for userId: ${userId}`, error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 
 // Insert or update a movie status
 const upsertMovieStatus = async (req, res) => {
