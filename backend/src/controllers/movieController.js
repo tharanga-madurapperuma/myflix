@@ -1,7 +1,7 @@
 const axios = require("axios");
 const MovieStatus = require("../Model/movieModel");
-const BASE_URL = process.env.BASE_URL; // Replace with actual base URL
-const API_KEY = process.env.API_KEY; // Replace with actual API key
+const BASE_URL = process.env.BASE_URL; 
+const API_KEY = process.env.API_KEY; 
 
 // Movie Controller Get movies
 const getMedia = async (req, res) => {

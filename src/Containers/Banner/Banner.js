@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./Banner.css";
-import { adventure, requestUniqueMovie } from "../requests";
+import { fetchAdventureMovies, fetchDetails } from './../../Api/movieApi';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPlus } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../Components/Loading/Loading";
 
@@ -13,34 +12,33 @@ const Banner = () => {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
 
-    useEffect(() => {
-        async function fetchData() {
-            setIsLoading(true);
-            try {
-                const request = await axios.get(adventure);
-                const fetchedMovie =
-                    request.data.results[
-                        Math.floor(Math.random() * request.data.results.length)
-                    ];
+useEffect(() => {
+    async function fetchData() {
+        setIsLoading(true);
+        try {
+            const adventureMovies = await fetchAdventureMovies();
+            console.log(adventureMovies);
+            const fetchedMovie =
+                adventureMovies.results[
+                    Math.floor(Math.random() * adventureMovies.results.length)
+                ];
 
-                // Make sure the fetched movie has a valid id before making the second request
-                if (fetchedMovie?.id) {
-                    setMovie(fetchedMovie);
-                    const uniqueRequest = await axios.get(
-                        requestUniqueMovie(fetchedMovie.id)
-                    );
-                    setUniqueMovie(uniqueRequest?.data);
-                } else {
-                    console.error("Movie ID is undefined or invalid");
-                }
-            } catch (error) {
-                console.error("Error fetching movie data:", error);
-            } finally {
-                setIsLoading(false);
+            // Make sure the fetched movie has a valid id before making the second request
+            if (fetchedMovie?.id) {
+                setMovie(fetchedMovie);
+                const uniqueMovieDetails = await fetchDetails('movie', fetchedMovie.id);
+                setUniqueMovie(uniqueMovieDetails);
+            } else {
+                console.error("Movie ID is undefined or invalid");
             }
+        } catch (error) {
+            console.error("Error fetching movie data:", error);
+        } finally {
+            setIsLoading(false);
         }
-        fetchData();
-    }, []);
+    }
+    fetchData();
+}, []);
 
     return (
         <div className="banner__wrapper">

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./MovieTrailer.css";
 import Navbar from "../../Components/Navbar/Navbar";
-import axios from "axios";
-import { movieReviews, requestMoreMovieDetails } from "../requests";
+import { fetchDetails, fetchReviews } from '../../Api/movieApi';
 import Footer from "../Footer/Footer";
 import Loading from "../../Components/Loading/Loading";
 
@@ -16,10 +15,12 @@ const MovieTrailer = () => {
     useEffect(() => {
         setIsLoading(true);
         setLoadedCount(0);
+
         const fetchMovie = async () => {
             try {
-                const response = await axios.get(requestMoreMovieDetails(id));
-                setMovie(response.data);
+                const movieDetails = await fetchDetails('movie', id);
+                console.log(movieDetails);
+                setMovie(movieDetails);
             } catch (error) {
                 console.error("Error fetching movie data:", error);
             } finally {
@@ -28,23 +29,28 @@ const MovieTrailer = () => {
         };
 
         const getReviews = async () => {
-            const response = await axios.get(movieReviews(id));
-            setReviews(response.data.results);
+            try {
+                const reviewsData = await fetchReviews('movie', id);
+                setReviews(reviewsData.results);
+            } catch (error) {
+                console.error("Error fetching reviews:", error);
+            }
         };
 
         fetchMovie();
         getReviews();
-    }, []);
+    }, [id]);
 
     useEffect(() => {
-        if (loadedCount === movie?.videos.results.length) {
+        if (loadedCount === movie?.videos?.results?.length) {
             setIsLoading(false);
         }
-    }, [loadedCount]);
+    }, [loadedCount, movie]);
 
     const increaseCount = () => {
         setLoadedCount((prevCount) => prevCount + 1);
     };
+
     return (
         <div>
             {isLoading && <Loading />}
@@ -53,7 +59,7 @@ const MovieTrailer = () => {
                 <div
                     className="trailer-details"
                     onLoad={() => {
-                        if (movie?.videos.results.length >= 0) {
+                        if (movie?.videos?.results?.length > 0) {
                             setIsLoading(true);
                         }
                     }}
@@ -81,15 +87,15 @@ const MovieTrailer = () => {
                 <div className="container-outer">
                     <div
                         className={
-                            movie?.videos.results.length == 0
+                            movie?.videos?.results?.length === 0
                                 ? "trailer-empty"
-                                : movie?.videos.results.length > 2
+                                : movie?.videos?.results?.length > 2
                                 ? "container-video"
                                 : "container-video-less-two"
                         }
                     >
-                        {movie?.videos.results.map((video) => (
-                            <div className="trailer">
+                        {movie?.videos?.results.map((video) => (
+                            <div className="trailer" key={video?.key}>
                                 <iframe
                                     width="700px"
                                     height="100%"
@@ -107,9 +113,9 @@ const MovieTrailer = () => {
                 </div>
 
                 <div className="container-reviews">
-                    {reviews?.length == 0 ? <h1>No reviews</h1> : null}
+                    {reviews?.length === 0 ? <h1>No reviews</h1> : null}
                     {reviews?.map((review) => (
-                        <div className="review">
+                        <div className="review" key={review?.id}>
                             <h3>{review.author}</h3>
                             <p>{review.content}</p>
                         </div>
