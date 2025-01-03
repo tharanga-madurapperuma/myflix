@@ -1,45 +1,38 @@
 import React, { useEffect, useState } from "react";
-import "./Movies.css";
 import Navbar from "../../Components/Navbar/Navbar";
-import Footer from "../Footer/Footer";
-import { allGenreList, movieCategories, searchMovie } from "../requests";
+import "./Movies.css";
 import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
+import Footer from "../Footer/Footer";
 import { useNavigate } from "react-router-dom";
 import Loading from "../../Components/Loading/Loading";
+import {fetchAllMovieGenres, fetchItemsByCategory, searchMedia} from "../../Api/movieApi";
 
 const Movies = () => {
     const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original/";
     const [genreList, setGenreList] = useState();
     const [galleryMovies, setGalleryMovies] = useState();
-    const [activeCategory, setActiveCategory] = useState(0);
+    const [activeCategory, setActiveCategory] = useState(1);
     const [activeGenres, setActiveGenres] = useState([]);
     const [searchText, setSearchText] = useState("");
     const [loadedCount, setLoadedCount] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
+    const movieCategories = ["trending", "now_playing", "top_rated", "popular", "upcoming"];
+
     useEffect(() => {
         const fetchGenres = async () => {
             setIsLoading(true);
-            try {
-                const request = await axios.get(allGenreList);
-                setGenreList(request.data.genres);
-            } catch (error) {
-                console.error("Error fetching genres:", error);
-            }
+            const request = await fetchAllMovieGenres();
+            setGenreList(request.genres);
         };
 
         const fetchGalleryMovies = async () => {
-            try {
-                const request = await axios.get(movieCategories[0].request);
-                setGalleryMovies(request.data.results);
-            } catch (error) {
-                console.error("Error fetching initial movies:", error);
-            } finally {
-                setIsLoading(false);
-            }
+            const request = await fetchItemsByCategory( movieCategories[0],"movie/week");
+            console.log(request);
+            setGalleryMovies(request.results);
         };
 
         fetchGenres();
@@ -51,10 +44,8 @@ const Movies = () => {
             setIsLoading(true);
             setLoadedCount(0);
             try {
-                const request = await axios.get(
-                    movieCategories[activeCategory].request
-                );
-                setGalleryMovies(request.data.results);
+                const request = await fetchItemsByCategory("movie", movieCategories[activeCategory]);
+                setGalleryMovies(request.results);
             } catch (error) {
                 console.error("Error fetching movies:", error);
             } finally {
@@ -67,20 +58,14 @@ const Movies = () => {
 
     useEffect(() => {
         if (activeGenres.length > 0) {
-            const filteredMovies = galleryMovies?.filter((movie) =>
+            const filteredMovies = galleryMovies.filter((movie) =>
                 activeGenres.every((genre) => movie.genre_ids.includes(genre))
             );
             setGalleryMovies(filteredMovies);
         } else {
             const fetchGalleryMovies = async () => {
-                try {
-                    const request = await axios.get(
-                        movieCategories[activeCategory].request
-                    );
-                    setGalleryMovies(request.data.results);
-                } catch (error) {
-                    console.error("Error refetching movies:", error);
-                }
+                const request = await fetchItemsByCategory("movie", movieCategories[activeCategory]);
+                setGalleryMovies(request.results);
             };
             fetchGalleryMovies();
         }
@@ -89,20 +74,17 @@ const Movies = () => {
     const fetchMovie = async () => {
         setIsLoading(true);
         setLoadedCount(0);
-        try {
-            if (searchText.trim() === "") {
+        const request = await searchMedia("movie", searchText);
+        if (searchText === "") {
+            const getMovies = async () => {
                 const request = await axios.get(
                     movieCategories[activeCategory].request
                 );
-                setGalleryMovies(request.data.results);
-            } else {
-                const request = await axios.get(searchMovie(searchText));
-                setGalleryMovies(request.data.results);
-            }
-        } catch (error) {
-            console.error("Error searching for movies:", error);
-        } finally {
-            setIsLoading(false);
+                setGalleryMovies(request.results);
+            };
+            getMovies();
+        } else {
+            setGalleryMovies(request.results);
         }
     };
 
@@ -122,26 +104,27 @@ const Movies = () => {
             <div className="content__movie">
                 <Navbar />
                 <div className="movie-categories">
-                    {movieCategories.map((category) => (
-                        <div
-                            key={category.id}
-                            className={
-                                activeCategory === category?.id
-                                    ? "movie-categories_category-active"
-                                    : "movie-categories_category"
-                            }
-                            onClick={() => setActiveCategory(category.id)}
-                        >
-                            <p>{category.name}</p>
+                    {movieCategories.map((category) => {
+                        return (
                             <div
                                 className={
                                     activeCategory === category?.id
-                                        ? "category-line-active"
-                                        : "category-line"
+                                        ? "movie-categories_category-active"
+                                        : "movie-categories_category"
                                 }
-                            ></div>
-                        </div>
-                    ))}
+                                onClick={() => setActiveCategory(category.id)}
+                            >
+                                <p>{category.name}</p>
+                                <div
+                                    className={
+                                        activeCategory === category?.id
+                                            ? "category-line-active"
+                                            : "category-line"
+                                    }
+                                ></div>
+                            </div>
+                        );
+                    })}
                 </div>
                 <div className="white-line"></div>
                 <div className="movie-genres">
@@ -157,33 +140,36 @@ const Movies = () => {
                         speed={3000}
                         modules={[Autoplay]}
                     >
-                        {genreList?.map((genre) => (
-                            <SwiperSlide className="genre-swiper-slide" key={genre.id}>
-                                <div
-                                    className={
-                                        activeGenres.includes(genre.id)
-                                            ? "movie-genres_genre-active"
-                                            : "movie-genres_genre"
-                                    }
-                                    onClick={() => {
-                                        activeGenres.includes(genre.id)
-                                            ? setActiveGenres(
-                                                  activeGenres.filter(
-                                                      (activeGenre) =>
-                                                          activeGenre !==
-                                                          genre.id
-                                                  )
-                                              )
-                                            : setActiveGenres([
-                                                  ...activeGenres,
-                                                  genre.id,
-                                              ]);
-                                    }}
-                                >
-                                    <p>{genre.name}</p>
-                                </div>
-                            </SwiperSlide>
-                        ))}
+                        {genreList &&
+                            genreList.map((genre) => {
+                                return (
+                                    <SwiperSlide className="genre-swiper-slide">
+                                        <div
+                                            className={
+                                                activeGenres.includes(genre.id)
+                                                    ? "movie-genres_genre-active"
+                                                    : "movie-genres_genre"
+                                            }
+                                            onClick={() => {
+                                                activeGenres.includes(genre.id)
+                                                    ? setActiveGenres(
+                                                          activeGenres.filter(
+                                                              (activeGenre) =>
+                                                                  activeGenre !==
+                                                                  genre.id
+                                                          )
+                                                      )
+                                                    : setActiveGenres([
+                                                          ...activeGenres,
+                                                          genre.id,
+                                                      ]);
+                                            }}
+                                        >
+                                            <p>{genre.name}</p>
+                                        </div>
+                                    </SwiperSlide>
+                                );
+                            })}
                     </Swiper>
                 </div>
                 <div className="movie-search">
@@ -206,25 +192,31 @@ const Movies = () => {
                     />
                 </div>
                 <div className="movie-list">
-                    {galleryMovies?.map((movie) => (
-                        <div
-                            className="movie-list__movie"
-                            key={movie.id}
-                            onClick={() => navigate(`/movieTrailer/${movie.id}`)}
-                        >
-                            <img
-                                src={`${IMAGE_BASE_URL}${movie.poster_path}`}
-                                alt={movie.title}
-                                onLoad={increaseCount}
-                                onError={increaseCount}
-                            />
-                            <div className="movie-title">{movie.title}</div>
-                            <div className="movie-info">
-                                <p>{movie.release_date}</p>
-                                <span>{movie.vote_average}</span>
-                            </div>
-                        </div>
-                    ))}
+                    {galleryMovies &&
+                        galleryMovies.map((movie) => {
+                            return (
+                                <div
+                                    className="movie-list__movie"
+                                    onClick={() => {
+                                        navigate(`/movieTrailer/${movie.id}`);
+                                    }}
+                                >
+                                    <img
+                                        src={`${IMAGE_BASE_URL}${movie.poster_path}`}
+                                        alt={movie.title}
+                                        onLoad={increaseCount}
+                                        onError={increaseCount}
+                                    />
+                                    <div className="movie-title">
+                                        {movie.title}
+                                    </div>
+                                    <div className="movie-info">
+                                        <p>{movie.release_date}</p>
+                                        <span>{movie.vote_average}</span>
+                                    </div>
+                                </div>
+                            );
+                        })}
                 </div>
                 <div className="white-line"></div>
             </div>

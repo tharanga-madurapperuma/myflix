@@ -5,29 +5,28 @@ import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 import { EffectCoverflow, Pagination, Autoplay } from "swiper/modules";
-import { adventure } from "../requests";
-import axios from "axios";
+import { fetchAdventureMovies } from "../../Api/movieApi"; // Import the function
 import { useNavigate } from "react-router-dom";
 import Loading from "../../Components/Loading/Loading";
 
 const NowPlaying = () => {
     const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original/";
     const [trendingMovies, setTrendingMovies] = useState([]);
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [imageCount, setImageCount] = useState(0);
-    const navigate = useNavigate();
 
     useEffect(() => {
+        setIsLoading(true);
+        setImageCount(0);
         const fetchTrending = async () => {
             setIsLoading(true);
-            setImageCount(0);
             try {
-                const response = await axios.get(adventure);
-                setTrendingMovies(response.data.results);
+                // Use the fetchAdventureMovies function from movieApi.js
+                const response = await fetchAdventureMovies();
+                setTrendingMovies(response.results); // Adjust according to your API response structure
             } catch (error) {
                 console.error("Error fetching movie data:", error);
-            } finally {
-                setIsLoading(false);
             }
         };
 
@@ -35,10 +34,10 @@ const NowPlaying = () => {
     }, []);
 
     useEffect(() => {
-        if (imageCount === trendingMovies.length && trendingMovies.length > 0) {
+        if (imageCount === trendingMovies.length) {
             setIsLoading(false);
         }
-    }, [imageCount, trendingMovies.length]);
+    }, [imageCount]);
 
     const increaseCount = () => {
         setImageCount((prevCount) => prevCount + 1);
@@ -49,10 +48,10 @@ const NowPlaying = () => {
             {isLoading && <Loading />}
             <div className="movie-swiper">
                 <Swiper
-                    effect="coverflow"
+                    effect={"coverflow"}
                     grabCursor={true}
                     centeredSlides={true}
-                    slidesPerView="auto"
+                    slidesPerView={"auto"}
                     loop={true}
                     coverflowEffect={{
                         rotate: 0,
@@ -66,17 +65,19 @@ const NowPlaying = () => {
                         disableOnInteraction: false,
                     }}
                     speed={1000}
-                    pagination={{ clickable: true }}
+                    pagination={true}
                     modules={[EffectCoverflow, Pagination, Autoplay]}
                     className="mySwiper"
                 >
-                    {trendingMovies.map((movie) => (
-                        <SwiperSlide key={movie.id}>
+                    {trendingMovies.map((movie, index) => (
+                        <SwiperSlide key={index}>
                             <img
                                 src={IMAGE_BASE_URL + movie.poster_path}
                                 alt={movie.title}
                                 className="movie__poster"
-                                onClick={() => navigate(`/movieTrailer/${movie.id}`)}
+                                onClick={() => {
+                                    navigate(`/movieTrailer/${movie.id}`);
+                                }}
                                 onLoad={increaseCount}
                                 onError={increaseCount}
                             />

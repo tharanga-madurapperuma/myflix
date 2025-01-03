@@ -1,47 +1,54 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../Components/Navbar/Navbar";
-import Footer from "../Footer/Footer";
 import { movieCategories, searchMovie } from "../requests";
 import axios from "axios";
+import Footer from "../Footer/Footer";
 import { useNavigate } from "react-router-dom";
 import "./myMovies.css";
+import { fetchItemsByCategory, searchMedia } from "../../Api/movieApi";
 
 const MyMovies = () => {
     const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original/";
-    const [galleryMovies, setGalleryMovies] = useState([]);
+    const [galleryMovies, setGalleryMovies] = useState();
     const [activeCategory, setActiveCategory] = useState("Watch");
     const [searchText, setSearchText] = useState("");
     const myCategories = ["Watch", "Watching", "Watched"];
     const navigate = useNavigate();
 
-    const fetchMovies = async (url) => {
-        try {
-            const { data } = await axios.get(url);
-            setGalleryMovies(data.results);
-        } catch (error) {
-            console.error("Error fetching movies:", error);
-        }
-    };
+    const movieCategories = ["trending", "now_playing", "top_rated", "popular", "upcoming"];
 
     useEffect(() => {
-        const category = movieCategories.find(
-            (cat) => cat.name === activeCategory
-        );
-        if (category) {
-            fetchMovies(category.request);
+        const fetchGalleryMovies = async () => {
+            const request = await fetchItemsByCategory("movie", movieCategories[0]);
+            setGalleryMovies(request.results);
+        };
+
+        fetchGalleryMovies();
+    }, []);
+
+    useEffect(() => {
+        const fetchMovieCategory = async (category) => {
+            const request = await fetchItemsByCategory("movie", movieCategories[category]);
+            setGalleryMovies(request.results);
+        };
+
+        for (let i = 0; i < 5; i++) {
+            if (activeCategory === i) {
+                fetchMovieCategory(i);
+            }
         }
     }, [activeCategory]);
 
-    const handleSearch = async () => {
-        if (searchText.trim() === "") {
-            const category = movieCategories.find(
-                (cat) => cat.name === activeCategory
-            );
-            if (category) {
-                fetchMovies(category.request);
-            }
+    const fetchMovie = async () => {
+        const request = await searchMedia("movie", searchText);
+        if (searchText === "") {
+            const getMovies = async () => {
+                const request = await fetchItemsByCategory("movie", movieCategories[activeCategory]);
+                setGalleryMovies(request.results);
+            };
+            getMovies();
         } else {
-            fetchMovies(searchMovie(searchText));
+            setGalleryMovies(request.results);
         }
     };
 
@@ -50,26 +57,27 @@ const MyMovies = () => {
             <div className="content__movie">
                 <Navbar />
                 <div className="movie-categories">
-                    {myCategories.map((category) => (
-                        <div
-                            key={category}
-                            className={
-                                activeCategory === category
-                                    ? "movie-categories_category-active"
-                                    : "movie-categories_category"
-                            }
-                            onClick={() => setActiveCategory(category)}
-                        >
-                            <p>{category}</p>
+                    {myCategories.map((category) => {
+                        return (
                             <div
                                 className={
                                     activeCategory === category
-                                        ? "category-line-active"
-                                        : "category-line"
+                                        ? "movie-categories_category-active"
+                                        : "movie-categories_category"
                                 }
-                            ></div>
-                        </div>
-                    ))}
+                                onClick={() => setActiveCategory(category)}
+                            >
+                                <p>{category}</p>
+                                <div
+                                    className={
+                                        activeCategory === category
+                                            ? "category-line-active"
+                                            : "category-line"
+                                    }
+                                ></div>
+                            </div>
+                        );
+                    })}
                 </div>
                 <div className="white-line"></div>
                 <div className="movie-search">
@@ -77,39 +85,39 @@ const MyMovies = () => {
                         className="search-input"
                         type="text"
                         placeholder="Search Movie"
-                        value={searchText}
                         onChange={(e) => setSearchText(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                                handleSearch();
-                            }
-                        }}
                     />
-                    <button
+                    <input
                         className="search-button"
-                        onClick={handleSearch}
-                    >
-                        Search
-                    </button>
+                        type="submit"
+                        value="Search"
+                        onClick={fetchMovie}
+                    />
                 </div>
                 <div className="movie-list">
-                    {galleryMovies.map((movie) => (
-                        <div
-                            key={movie.id}
-                            className="movie-list__movie"
-                            onClick={() => navigate(`/movieTrailer/${movie.id}`)}
-                        >
-                            <img
-                                src={`${IMAGE_BASE_URL}${movie.poster_path}`}
-                                alt={movie.title}
-                            />
-                            <div className="movie-title">{movie.title}</div>
-                            <div className="movie-info">
-                                <p>{movie.release_date}</p>
-                                <span>{movie.vote_average}</span>
-                            </div>
-                        </div>
-                    ))}
+                    {galleryMovies &&
+                        galleryMovies.map((movie) => {
+                            return (
+                                <div
+                                    className="movie-list__movie"
+                                    onClick={() => {
+                                        navigate(`/movieTrailer/${movie.id}`);
+                                    }}
+                                >
+                                    <img
+                                        src={`${IMAGE_BASE_URL}${movie.poster_path}`}
+                                        alt={movie.title}
+                                    />
+                                    <div className="movie-title">
+                                        {movie.title}
+                                    </div>
+                                    <div className="movie-info">
+                                        <p>{movie.release_date}</p>
+                                        <span>{movie.vote_average}</span>
+                                    </div>
+                                </div>
+                            );
+                        })}
                 </div>
                 <div className="white-line"></div>
             </div>
