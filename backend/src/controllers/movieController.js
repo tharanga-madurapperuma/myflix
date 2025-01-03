@@ -79,7 +79,7 @@ const getMoviesByStatus = async (req, res) => {
     const watched =
       (await MovieStatus.getMoviesByStatus(userId, "watched")) || [];
     const toWatch =
-      (await MovieStatus.getMoviesByStatus(userId, "to watch")) || [];
+      (await MovieStatus.getMoviesByStatus(userId, "toWatch")) || [];
 
     // Send response
     res.json({

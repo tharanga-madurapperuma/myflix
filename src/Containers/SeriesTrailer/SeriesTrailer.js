@@ -1,16 +1,29 @@
-import React, { useEffect, useState } from "react";
-import "../MovierTrailer/MovieTrailer.css";
+import React, { useContext, useEffect, useState } from "react";
+import "../../Containers/MovierTrailer/MovieTrailer.css";
 import Navbar from "../../Components/Navbar/Navbar";
-import { fetchDetails, fetchReviews } from "../../Api/movieApi"; // Import functions from movieApi.js
+import { fetchDetails, fetchReviews, upsertTVStatus } from "../../Api/movieApi";
 import Footer from "../Footer/Footer";
 import Loading from "../../Components/Loading/Loading";
+import AuthContext from "../../Context/AuthContext";
 
 const SeriesTrailer = () => {
     const id = window.location.pathname.split("/")[2]; // Extract series ID from the URL
+    const { tvStat, user, refreshTvStat } = useContext(AuthContext);
+
     const [series, setSeries] = useState(null);
     const [reviews, setReviews] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [loadedCount, setLoadedCount] = useState(0);
+    const [buttonState, setButtonState] = useState({
+        toWatch: false,
+        watching: false,
+        watched: false,
+    });
+    const [loadingState, setLoadingState] = useState({
+        toWatchLoading: false,
+        watchingLoading: false,
+        watchedLoading: false,
+    });
 
     useEffect(() => {
         const fetchSeriesData = async () => {
@@ -33,6 +46,43 @@ const SeriesTrailer = () => {
 
         fetchSeriesData();
     }, [id]);
+
+    useEffect(() => {
+        if (tvStat) {
+            setButtonState({
+                toWatch: tvStat.toWatch?.includes(parseInt(id)) || false,
+                watching: tvStat.watching?.includes(parseInt(id)) || false,
+                watched: tvStat.watched?.includes(parseInt(id)) || false,
+            });
+        }
+    }, [tvStat, id]);
+
+    const handleWatchStatus = async (status) => {
+        if (!user) {
+            alert("Please log in to update your watch status.");
+            return;
+        }
+        try {
+            // Set loading state
+            setLoadingState((prev) => ({ ...prev, [`${status}Loading`]: true }));
+
+            await upsertTVStatus(user.id, id, status);
+            await refreshTvStat();
+
+            // Update button state after successful update
+            setButtonState((prev) => ({
+                ...prev,
+                toWatch: status === "toWatch" ? true : prev.toWatch,
+                watching: status === "watching" ? true : prev.watching,
+                watched: status === "watched" ? true : prev.watched,
+            }));
+        } catch (error) {
+            console.error("Failed to update watch status:", error);
+        } finally {
+            // Reset loading state
+            setLoadingState((prev) => ({ ...prev, [`${status}Loading`]: false }));
+        }
+    };
 
     const increaseCount = () => {
         setLoadedCount((prevCount) => prevCount + 1);
@@ -65,9 +115,27 @@ const SeriesTrailer = () => {
                 )}
 
                 <div className="trailer-add-my-movies">
-                    <button>Add to Watch</button>
-                    <button>Add to Watching</button>
-                    <button>Add to Watched</button>
+                    <button
+                        onClick={() => handleWatchStatus("toWatch")}
+                        style={buttonState.toWatch ? { backgroundColor: "green",color:"white" } : null}
+                        disabled={buttonState.toWatch || loadingState.toWatchLoading}
+                    >
+                        {loadingState.toWatchLoading ? "Loading..." : "Add to Watch"}
+                    </button>
+                    <button
+                        onClick={() => handleWatchStatus("watching")}
+                        style={buttonState.watching ? { backgroundColor: "green",color:"white" } : null}
+                        disabled={buttonState.watching || loadingState.watchingLoading}
+                    >
+                        {loadingState.watchingLoading ? "Loading..." : "Add to Watching"}
+                    </button>
+                    <button
+                        onClick={() => handleWatchStatus("watched")}
+                        style={buttonState.watched ? { backgroundColor: "green",color:"white" } : null}
+                        disabled={buttonState.watched || loadingState.watchedLoading}
+                    >
+                        {loadingState.watchedLoading ? "Loading..." : "Add to Watched"}
+                    </button>
                 </div>
 
                 <div className="container-outer">

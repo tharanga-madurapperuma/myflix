@@ -100,6 +100,9 @@ const Navbar = () => {
                     <li>
                         <Link to="/myMovies">My Movies</Link>
                     </li>
+                    <li>
+                        <Link to="/mySeries">My TV Series</Link>
+                    </li>
                 </ul>
                 <div
                     className="navBar__user"

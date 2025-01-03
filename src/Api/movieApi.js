@@ -63,3 +63,64 @@ export const fetchItemsByCategory = async (type, category) => {
     category,
   });
 };
+
+
+const url = 'http://localhost:5000/api/movie/moviestatus';
+
+export const getMoviesByStatus = async (userId) => {
+  try {
+    const response = await axios.get(`${url}`, {
+      params: { id: userId },
+    });
+    return response.data; // Contains { watching, watched, toWatch }
+  
+  } catch (error) {
+    console.error('Error fetching movies by status:', error);
+    throw error;
+  }
+};
+
+export const upsertMovieStatus = async (userId, movieId, status) => {
+  try {
+    console.log(userId, movieId, status)
+    const response = await axios.post(`${url}`, {
+      userId,
+      movieId,
+      status,
+    });
+    return response.data; // Contains the result of the upsert operation
+  } catch (error) {
+    console.error('Error updating movie status:', error);
+    throw error;
+  }
+};
+
+const url2 = 'http://localhost:5000/api/tv/tvstatus';
+
+  export const getTvSeriesByStatus = async (userId) => {
+    try {
+      const response = await axios.get(`${url2}`, {
+        params: { id: userId },
+      });
+   
+      return response.data; // Contains { watching, watched, toWatch }
+    } catch (error) {
+      console.error('Error fetching movies by status:', error);
+      throw error;
+    }
+  };
+  
+  export const upsertTVStatus = async (userId, seriesId, status) => {
+    try {
+      console.log(userId, seriesId, status)
+      const response = await axios.post(`${url2}`, {
+        userId,
+        seriesId,
+        status,
+      });
+      return response.data; // Contains the result of the upsert operation
+    } catch (error) {
+      console.error('Error updating movie status:', error);
+      throw error;
+    }
+};

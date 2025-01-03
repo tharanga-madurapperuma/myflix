@@ -1,74 +1,93 @@
 import React, { createContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getUserDetails } from '../Api/api';
+import { getMoviesByStatus,getTvSeriesByStatus } from '../Api/movieApi';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [authToken, setAuthToken] = useState(localStorage.getItem('authToken') || null);
   const [user, setUser] = useState(null);
+  const [movieStat, setMovieStat] = useState(null);
+  const [tvStat, settvStat] = useState(null);
   const navigate = useNavigate();
 
-  // Persist token to localStorage and sync state
   const saveAuthToken = (token) => {
     localStorage.setItem('authToken', token);
     setAuthToken(token);
   };
 
-  // Remove token from localStorage and reset state
   const clearAuthToken = () => {
-    console.log('Clearing auth token...');
     localStorage.removeItem('authToken');
     setAuthToken(null);
     setUser(null);
+    setMovieStat(null);
   };
 
-  // Login function
   const login = (token) => {
     saveAuthToken(token);
-    navigate('/'); // Redirect to home after successful login
+    navigate('/');
   };
 
-  // Signup function
-  const signup = () => {
-    navigate('/auth/login'); // Redirect to login after successful signup
-  };
-
-  // Logout function
   const logout = () => {
     clearAuthToken();
-    navigate('/auth/login'); // Redirect to login after logout
+    navigate('/auth/login');
   };
 
-  // Fetch user data when token is present
   const fetchUserData = async () => {
-    console.log('Fetching user data...');
-    if (!authToken) return; // Avoid unnecessary API calls
+    if (!authToken) return;
     try {
-      const data = await getUserDetails(authToken); // Pass token to API call
-      setUser(data.user); // Set user data in state
+      const data = await getUserDetails(authToken);
+      const movies = await getMoviesByStatus(data.user?.id);
+      const tvseries = await getTvSeriesByStatus(data.user?.id);
+
+      setUser(data.user);
+      settvStat(tvseries);
+      setMovieStat(movies);
     } catch (error) {
       console.error('Failed to fetch user data:', error);
-      console.log(authToken);
-      clearAuthToken(); // Clear token on error (e.g., token expired)
-      navigate('/auth/login'); // Redirect to login
+      clearAuthToken();
+      navigate('/auth/login');
     }
   };
 
-  // Effect to fetch user details on token change or page refresh
+  const refreshMovieStat = async () => {
+    try {
+      if (user?.id) {
+        const movies = await getMoviesByStatus(user.id);
+        setMovieStat(movies);
+      }
+    } catch (error) {
+      console.error('Failed to refresh movie statuses:', error);
+    }
+  };
+
+  const refreshTvStat = async () => {
+    try {
+      if (user?.id) {
+        const tvseries = await getTvSeriesByStatus(user.id);
+        settvStat(tvseries);
+      }
+    } catch (error) {
+      console.error('Failed to refresh movie statuses:', error);
+    }
+  };
+
   useEffect(() => {
     fetchUserData();
-  }, [authToken]); // Run when authToken changes
+  }, [authToken]);
 
   return (
     <AuthContext.Provider
       value={{
         authToken,
         user,
-        setUser,
+        movieStat,
+        tvStat,
         login,
-        signup,
         logout,
+        refreshMovieStat,
+        refreshTvStat,
       }}
     >
       {children}

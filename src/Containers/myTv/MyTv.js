@@ -3,59 +3,60 @@ import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import { useNavigate } from "react-router-dom";
 import { fetchDetails } from "../../Api/movieApi";
-import AuthContext  from "../../Context/AuthContext"; 
-import "./myMovies.css";
+import AuthContext from "../../Context/AuthContext"; 
+import "./myTv.css";
 
-const MyMovies = () => {
+const MyTv = () => {
     const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original/";
-    const [galleryMovies, setGalleryMovies] = useState([]);
+    const [gallerySeries, setGallerySeries] = useState([]);
     const [activeCategory, setActiveCategory] = useState("To Watch");
-    const [watchedMovies, setWatchedMovies] = useState([]);
-    const [watchingMovies, setWatchingMovies] = useState([]);
-    const [toWatchMovies, setToWatchMovies] = useState([]);
-    const { movieStat } = useContext(AuthContext);
+    const [watchedSeries, setWatchedSeries] = useState([]);
+    const [watchingSeries, setWatchingSeries] = useState([]);
+    const [toWatchSeries, setToWatchSeries] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const { tvStat } = useContext(AuthContext);
     const navigate = useNavigate();
 
-    // Fetch movies based on IDs in movieStat
-    const fetchMoviesByCategory = async (ids) => {
+    // Fetch movies based on IDs in tvStat
+    const fetchSeriesByCategory = async (ids) => {
         try {
-            const movieDetails = await Promise.all(
-                ids.map((id) => fetchDetails("movie", id))
+            const tvDetails = await Promise.all(
+                ids.map((id) => fetchDetails("tv", id))
             );
-            return movieDetails;
+            return tvDetails;
         } catch (error) {
             console.error("Error fetching movie details:", error);
             return [];
         }
     };
 
-    // Fetch all movies when movieStat changes
+    // Fetch all movies when tvStat changes
     useEffect(() => {
-        if (movieStat) {
-            const fetchAllMovies = async () => {
+        if (tvStat) {
+            const fetchAllSeries = async () => {
+                setLoading(true);
                 const [watched, watching, toWatch] = await Promise.all([
-                    fetchMoviesByCategory(movieStat.watched),
-                    fetchMoviesByCategory(movieStat.watching),
-                    fetchMoviesByCategory(movieStat.toWatch),
+                    fetchSeriesByCategory(tvStat.watched),
+                    fetchSeriesByCategory(tvStat.watching),
+                    fetchSeriesByCategory(tvStat.toWatch),
                 ]);
-                setWatchedMovies(watched);
-                setWatchingMovies(watching);
-                setToWatchMovies(toWatch);
-
-                // Set default category movies
-                setGalleryMovies(toWatch); // Default to "To Watch"
+                setWatchedSeries(watched);
+                setWatchingSeries(watching);
+                setToWatchSeries(toWatch);
+                setGallerySeries(toWatch); // Default to "To Watch"
+                setLoading(false);
             };
 
-            fetchAllMovies();
+            fetchAllSeries();
         }
-    }, [movieStat]);
+    }, [tvStat]);
 
     // Handle category change
     const handleCategoryChange = (category) => {
         setActiveCategory(category);
-        if (category === "To Watch") setGalleryMovies(toWatchMovies);
-        if (category === "Watching") setGalleryMovies(watchingMovies);
-        if (category === "Watched") setGalleryMovies(watchedMovies);
+        if (category === "To Watch") setGallerySeries(toWatchSeries);
+        if (category === "Watching") setGallerySeries(watchingSeries);
+        if (category === "Watched") setGallerySeries(watchedSeries);
     };
 
     return (
@@ -87,8 +88,10 @@ const MyMovies = () => {
                 <div className="white-line"></div>
 
                 <div className="movie-list">
-                    {galleryMovies.length > 0 ? (
-                        galleryMovies.map((movie) => (
+                    {loading ? (
+                        <p>Loading movies...</p>
+                    ) : gallerySeries.length > 0 ? (
+                        gallerySeries.map((movie) => (
                             <div
                                 key={movie.id}
                                 className="movie-list__movie"
@@ -118,4 +121,4 @@ const MyMovies = () => {
     );
 };
 
-export default MyMovies;
+export default MyTv;
