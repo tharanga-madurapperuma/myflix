@@ -9,6 +9,7 @@ dotenv.config();
 
 const authRoutes = require("./routes/auth");
 const movieRoutes = require("./routes/movieRoutes");
+const tvRoutes = require("./routes/tvRoutes");
 
 const app = express();
 
@@ -23,6 +24,8 @@ app.route("/").get((req, res) => {
 //Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/movie",movieRoutes);
+app.use("/api/tv",tvRoutes);
+
 
 const PORT = process.env.PORT || 0; 
 

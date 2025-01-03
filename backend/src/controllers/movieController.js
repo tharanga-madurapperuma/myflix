@@ -1,7 +1,7 @@
 const axios = require("axios");
 const MovieStatus = require("../Model/movieModel");
-const BASE_URL = process.env.BASE_URL; // Replace with actual base URL
-const API_KEY = process.env.API_KEY; // Replace with actual API key
+const BASE_URL = process.env.BASE_URL; 
+const API_KEY = process.env.API_KEY; 
 
 // Movie Controller Get movies
 const getMedia = async (req, res) => {
@@ -30,7 +30,7 @@ const getMedia = async (req, res) => {
     case "details":
       // Fetch detailed information for a specific item
       url = `${BASE_URL}/${type}/${id}?api_key=${API_KEY}&language=en${
-        append ? `&append_to_response=${append}` : ""
+        append ? `&append_to_response=videos,images` : ""
       }`;
       break;
 
@@ -79,7 +79,7 @@ const getMoviesByStatus = async (req, res) => {
     const watched =
       (await MovieStatus.getMoviesByStatus(userId, "watched")) || [];
     const toWatch =
-      (await MovieStatus.getMoviesByStatus(userId, "to watch")) || [];
+      (await MovieStatus.getMoviesByStatus(userId, "toWatch")) || [];
 
     // Send response
     res.json({

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../Components/Navbar/Navbar";
 import "./TVSeries.css";
-import { allGenreListTV, searchSeries, TVCategories } from "../requests";
+import { fetchAllTVGenres, fetchItemsByCategory, searchMedia } from "../../Api/movieApi";
 import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
@@ -18,19 +18,22 @@ const TVSeries = () => {
     const [searchText, setSearchText] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [loadedCount, setLoadedCount] = useState(0);
+
+    const tvSeriesCategories = ["airing_today","on_the_air","popular","top_rated"];
+    const tvCategoriesName = ["Airing Today", "On The Air", "Popular", "Top Rated"];
     const navigate = useNavigate();
 
     useEffect(() => {
         setIsLoading(true);
         setLoadedCount(0);
         const fetchGenres = async () => {
-            const request = await axios.get(allGenreListTV);
-            setGenreList(request.data.genres);
+            const request = await fetchAllTVGenres();
+            setGenreList(request.genres);
         };
 
         const fetchGalleryTVSeries = async () => {
-            const request = await axios.get(TVCategories[0].request);
-            setGalleryTVSeries(request.data.results);
+            const request = await fetchItemsByCategory("tv",tvSeriesCategories[0]);
+            setGalleryTVSeries(request.results);
         };
 
         fetchGenres();
@@ -42,10 +45,8 @@ const TVSeries = () => {
             setIsLoading(true);
             setLoadedCount(0);
             try {
-                const request = await axios.get(
-                    TVCategories[activeCategory].request
-                );
-                setGalleryTVSeries(request.data.results);
+                const request = await fetchItemsByCategory("tv",tvSeriesCategories[activeCategory]);
+                setGalleryTVSeries(request.results);
             } catch (error) {
                 console.error("Error fetching TV series:", error);
             } finally {
@@ -65,10 +66,8 @@ const TVSeries = () => {
             setGalleryTVSeries(filteredTVSeries);
         } else {
             const fetchGalleryTVSeries = async () => {
-                const request = await axios.get(
-                    TVCategories[activeCategory].request
-                );
-                setGalleryTVSeries(request.data.results);
+                const request = await fetchItemsByCategory("tv",tvSeriesCategories[activeCategory]);
+                setGalleryTVSeries(request.results);
             };
             fetchGalleryTVSeries();
         }
@@ -77,17 +76,15 @@ const TVSeries = () => {
     const fetchSeries = async () => {
         setIsLoading(true);
         setLoadedCount(0);
-        const request = await axios.get(searchSeries(searchText));
+        const request = await searchMedia("tv",searchText);
         if (searchText === "") {
             const getSeries = async () => {
-                const request = await axios.get(
-                    TVCategories[activeCategory].request
-                );
-                setGalleryTVSeries(request.data.results);
+                const request = await fetchItemsByCategory("tv",tvSeriesCategories[activeCategory]);
+                setGalleryTVSeries(request.results);
             };
             getSeries();
         } else {
-            setGalleryTVSeries(request.data.results);
+            setGalleryTVSeries(request.results);
         }
     };
 
@@ -107,20 +104,20 @@ const TVSeries = () => {
             <div className="content__tvSeries">
                 <Navbar />
                 <div className="tvSeries-categories">
-                    {TVCategories.map((category) => {
+                    {tvCategoriesName.map((category,index) => {
                         return (
                             <div
                                 className={
-                                    activeCategory === category?.id
+                                    activeCategory === index
                                         ? "tvSeries-categories_category-active"
                                         : "tvSeries-categories_category"
                                 }
-                                onClick={() => setActiveCategory(category.id)}
+                                onClick={() => setActiveCategory(index)}
                             >
-                                <p>{category.name}</p>
+                                <p>{category}</p>
                                 <div
                                     className={
-                                        activeCategory === category?.id
+                                        activeCategory === index
                                             ? "category-line-active"
                                             : "category-line"
                                     }

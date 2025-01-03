@@ -14,40 +14,36 @@ import TVSeries from "./Containers/TVSeries/TVSeries.js";
 import MovieTrailer from "./Containers/MovierTrailer/MovieTrailer.js";
 import SeriesTrailer from "./Containers/SeriesTrailer/SeriesTrailer.js";
 import MyMovies from "./Containers/myMovies/MyMovies.js";
+import MyTv from "./Containers/myTv/MyTv.js";
 
 function App() {
-    return (
-        <div className="App">
-            <Router>
-                <AuthProvider>
-                    <Routes>
-                        {/* Public routes */}
-                        <Route path="auth/:mode" element={<AuthForm />} />
+  return (
+    <div className="App">
+      <Router>
+        <AuthProvider>
+          <Routes>
+            {/* Public routes */}
+            <Route path="auth/:mode" element={<AuthForm />} />
 
-                        {/* Protected routes */}
-                        {/* <Route element={<ProtectedLayout />}> */}
-                        <Route path="/" element={<Home />} />
-                        <Route path="/movies" element={<Movies />} />
-                        <Route path="/series" element={<TVSeries />} />
-                        <Route
-                            path="/movieTrailer/:id"
-                            element={<MovieTrailer />}
-                        />
-                        <Route
-                            path="/seriesTrailer/:id"
-                            element={<SeriesTrailer />}
-                        />
-                        <Route path="/edit-profile" element={<EditProfile />} />
-                        <Route path="/myMovies" element={<MyMovies />} />
-                        {/* </Route> */}
+            {/* Protected routes */}
+            <Route element={<ProtectedLayout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/movies" element={<Movies />} />
+              <Route path="/series" element={<TVSeries />} />
+              <Route path="/movieTrailer/:id" element={<MovieTrailer />} />
+              <Route path="/seriesTrailer/:id" element={<SeriesTrailer />} />
+              <Route path="/edit-profile" element={<EditProfile />} />
+              <Route path="/myMovies" element={<MyMovies />} />
+              <Route path="/mySeries" element={<MyTv />} />
+            </Route>
 
-                        {/* Catch all route */}
-                        <Route path="*" element={<NotFound />} />
-                    </Routes>
-                </AuthProvider>
-            </Router>
-        </div>
-    );
+            {/* Catch all route */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </AuthProvider>
+      </Router>
+    </div>
+  );
 }
 
 export default App;

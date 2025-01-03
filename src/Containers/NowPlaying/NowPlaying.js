@@ -5,8 +5,7 @@ import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 import { EffectCoverflow, Pagination, Autoplay } from "swiper/modules";
-import { adventure } from "../requests";
-import axios from "axios";
+import { fetchAdventureMovies } from "../../Api/movieApi"; // Import the function
 import { useNavigate } from "react-router-dom";
 import Loading from "../../Components/Loading/Loading";
 
@@ -23,8 +22,9 @@ const NowPlaying = () => {
         const fetchTrending = async () => {
             setIsLoading(true);
             try {
-                const request = await axios.get(adventure);
-                setTrendingMovies(request.data.results);
+                // Use the fetchAdventureMovies function from movieApi.js
+                const response = await fetchAdventureMovies();
+                setTrendingMovies(response.results); // Adjust according to your API response structure
             } catch (error) {
                 console.error("Error fetching movie data:", error);
             }
