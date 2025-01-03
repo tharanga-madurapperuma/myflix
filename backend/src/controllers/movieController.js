@@ -30,7 +30,7 @@ const getMedia = async (req, res) => {
     case "details":
       // Fetch detailed information for a specific item
       url = `${BASE_URL}/${type}/${id}?api_key=${API_KEY}&language=en${
-        append ? `&append_to_response=${append}` : ""
+        append ? `&append_to_response=videos,images` : ""
       }`;
       break;
 

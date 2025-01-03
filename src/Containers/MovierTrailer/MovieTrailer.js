@@ -18,7 +18,7 @@ const MovieTrailer = () => {
 
         const fetchMovie = async () => {
             try {
-                const movieDetails = await fetchDetails('movie', id);
+                const movieDetails = await fetchDetails('movie', id,true);
                 console.log(movieDetails);
                 setMovie(movieDetails);
             } catch (error) {

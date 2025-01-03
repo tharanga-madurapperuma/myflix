@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../Components/Navbar/Navbar";
 import "./TVSeries.css";
-import { allGenreListTV, searchSeries, TVCategories } from "../requests";
 import { fetchAllTVGenres, fetchItemsByCategory, searchMedia } from "../../Api/movieApi";
 import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -21,6 +20,7 @@ const TVSeries = () => {
     const [loadedCount, setLoadedCount] = useState(0);
 
     const tvSeriesCategories = ["airing_today","on_the_air","popular","top_rated"];
+    const tvCategoriesName = ["Airing Today", "On The Air", "Popular", "Top Rated"];
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -79,9 +79,7 @@ const TVSeries = () => {
         const request = await searchMedia("tv",searchText);
         if (searchText === "") {
             const getSeries = async () => {
-                const request = await axios.get(
-                    TVCategories[activeCategory].request
-                );
+                const request = await fetchItemsByCategory("tv",tvSeriesCategories[activeCategory]);
                 setGalleryTVSeries(request.results);
             };
             getSeries();
@@ -106,20 +104,20 @@ const TVSeries = () => {
             <div className="content__tvSeries">
                 <Navbar />
                 <div className="tvSeries-categories">
-                    {TVCategories.map((category) => {
+                    {tvCategoriesName.map((category,index) => {
                         return (
                             <div
                                 className={
-                                    activeCategory === category?.id
+                                    activeCategory === index
                                         ? "tvSeries-categories_category-active"
                                         : "tvSeries-categories_category"
                                 }
-                                onClick={() => setActiveCategory(category.id)}
+                                onClick={() => setActiveCategory(index)}
                             >
-                                <p>{category.name}</p>
+                                <p>{category}</p>
                                 <div
                                     className={
-                                        activeCategory === category?.id
+                                        activeCategory === index
                                             ? "category-line-active"
                                             : "category-line"
                                     }

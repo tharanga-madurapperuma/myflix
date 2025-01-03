@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../../Components/Navbar/Navbar";
-import { movieCategories, searchMovie } from "../requests";
 import axios from "axios";
 import Footer from "../Footer/Footer";
 import { useNavigate } from "react-router-dom";
