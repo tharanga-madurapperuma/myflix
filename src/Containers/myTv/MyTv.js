@@ -3,7 +3,7 @@ import Navbar from "../../Components/Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import { useNavigate } from "react-router-dom";
 import { fetchDetails } from "../../Api/movieApi";
-import AuthContext from "../../Context/AuthContext"; 
+import AuthContext from "../../Context/AuthContext";
 import "./myTv.css";
 
 const MyTv = () => {
@@ -89,21 +89,23 @@ const MyTv = () => {
 
                 <div className="movie-list">
                     {loading ? (
-                        <p>Loading movies...</p>
+                        <p>Loading TV Series...</p>
                     ) : gallerySeries.length > 0 ? (
                         gallerySeries.map((movie) => (
                             <div
                                 key={movie.id}
                                 className="movie-list__movie"
-                                onClick={() => navigate(`/movieTrailer/${movie.id}`)}
+                                onClick={() =>
+                                    navigate(`/movieTrailer/${movie.id}`)
+                                }
                             >
                                 <img
                                     src={`${IMAGE_BASE_URL}${movie.poster_path}`}
-                                    alt={movie.title}
+                                    alt={movie.name}
                                 />
-                                <div className="movie-title">{movie.title}</div>
+                                <div className="movie-title">{movie.name}</div>
                                 <div className="movie-info">
-                                    <p>{movie.release_date}</p>
+                                    <p>{movie.first_air_date}</p>
                                     <span>{movie.vote_average}</span>
                                 </div>
                             </div>

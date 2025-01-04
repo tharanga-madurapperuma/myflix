@@ -64,7 +64,10 @@ const SeriesTrailer = () => {
         }
         try {
             // Set loading state
-            setLoadingState((prev) => ({ ...prev, [`${status}Loading`]: true }));
+            setLoadingState((prev) => ({
+                ...prev,
+                [`${status}Loading`]: true,
+            }));
 
             await upsertTVStatus(user.id, id, status);
             await refreshTvStat();
@@ -80,20 +83,25 @@ const SeriesTrailer = () => {
             console.error("Failed to update watch status:", error);
         } finally {
             // Reset loading state
-            setLoadingState((prev) => ({ ...prev, [`${status}Loading`]: false }));
+            setLoadingState((prev) => ({
+                ...prev,
+                [`${status}Loading`]: false,
+            }));
         }
     };
+
+    useEffect(() => {
+        if (loadedCount === series?.videos.results.length) {
+            setIsLoading(false);
+        } else if (loadedCount === 5) {
+            setIsLoading(false);
+        }
+    }, [loadedCount]);
 
     const increaseCount = () => {
         setLoadedCount((prevCount) => prevCount + 1);
     };
-
-    useEffect(() => {
-        if (series?.videos?.results?.length > 0 && loadedCount === series.videos.results.length) {
-            setIsLoading(false);
-        }
-    }, [loadedCount, series]);
-
+    console.log(series);
     return (
         <div>
             {isLoading && <Loading />}
@@ -108,8 +116,12 @@ const SeriesTrailer = () => {
                             />
                         </div>
                         <div className="trailer-details__info">
-                            <h1 className="trailer-details__title">{series.name}</h1>
-                            <p className="trailer-details__overview">{series.overview}</p>
+                            <h1 className="trailer-details__title">
+                                {series.name}
+                            </h1>
+                            <p className="trailer-details__overview">
+                                {series.overview}
+                            </p>
                         </div>
                     </div>
                 )}
@@ -117,24 +129,48 @@ const SeriesTrailer = () => {
                 <div className="trailer-add-my-movies">
                     <button
                         onClick={() => handleWatchStatus("toWatch")}
-                        style={buttonState.toWatch ? { backgroundColor: "green",color:"white" } : null}
-                        disabled={buttonState.toWatch || loadingState.toWatchLoading}
+                        style={
+                            buttonState.toWatch
+                                ? { backgroundColor: "green", color: "white" }
+                                : null
+                        }
+                        disabled={
+                            buttonState.toWatch || loadingState.toWatchLoading
+                        }
                     >
-                        {loadingState.toWatchLoading ? "Loading..." : "Add to Watch"}
+                        {loadingState.toWatchLoading
+                            ? "Loading..."
+                            : "Add to Watch"}
                     </button>
                     <button
                         onClick={() => handleWatchStatus("watching")}
-                        style={buttonState.watching ? { backgroundColor: "green",color:"white" } : null}
-                        disabled={buttonState.watching || loadingState.watchingLoading}
+                        style={
+                            buttonState.watching
+                                ? { backgroundColor: "green", color: "white" }
+                                : null
+                        }
+                        disabled={
+                            buttonState.watching || loadingState.watchingLoading
+                        }
                     >
-                        {loadingState.watchingLoading ? "Loading..." : "Add to Watching"}
+                        {loadingState.watchingLoading
+                            ? "Loading..."
+                            : "Add to Watching"}
                     </button>
                     <button
                         onClick={() => handleWatchStatus("watched")}
-                        style={buttonState.watched ? { backgroundColor: "green",color:"white" } : null}
-                        disabled={buttonState.watched || loadingState.watchedLoading}
+                        style={
+                            buttonState.watched
+                                ? { backgroundColor: "green", color: "white" }
+                                : null
+                        }
+                        disabled={
+                            buttonState.watched || loadingState.watchedLoading
+                        }
                     >
-                        {loadingState.watchedLoading ? "Loading..." : "Add to Watched"}
+                        {loadingState.watchedLoading
+                            ? "Loading..."
+                            : "Add to Watched"}
                     </button>
                 </div>
 
@@ -147,21 +183,23 @@ const SeriesTrailer = () => {
                                     : "container-video-less-two"
                             }
                         >
-                            {series.videos.results.map((video) => (
-                                <div className="trailer" key={video.id}>
-                                    <iframe
-                                        width="100%"
-                                        height="100%"
-                                        src={`https://www.youtube.com/embed/${video.key}`}
-                                        title={video.name || "Trailer"}
-                                        frameBorder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                        onLoad={increaseCount}
-                                        onError={increaseCount}
-                                    ></iframe>
-                                </div>
-                            ))}
+                            {series.videos.results.map((video, index) =>
+                                index < 5 ? (
+                                    <div className="trailer" key={video.id}>
+                                        <iframe
+                                            width="700px"
+                                            height="100%"
+                                            src={`https://www.youtube.com/embed/${video.key}`}
+                                            title={video.name || "Trailer"}
+                                            frameBorder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowFullScreen
+                                            onLoad={increaseCount}
+                                            onError={increaseCount}
+                                        ></iframe>
+                                    </div>
+                                ) : null
+                            )}
                         </div>
                     ) : (
                         <h2 className="trailer-empty">No trailers available</h2>
