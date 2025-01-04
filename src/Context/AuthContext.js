@@ -12,28 +12,38 @@ export const AuthProvider = ({ children }) => {
   const [tvStat, settvStat] = useState(null);
   const navigate = useNavigate();
 
+  //Save the Token to Local Storage
   const saveAuthToken = (token) => {
     localStorage.setItem('authToken', token);
     setAuthToken(token);
   };
 
+  // Remove token from localStorage and reset state
   const clearAuthToken = () => {
     localStorage.removeItem('authToken');
     setAuthToken(null);
     setUser(null);
     setMovieStat(null);
+    settvStat(null);
   };
-
+//Login Function
   const login = (token) => {
     saveAuthToken(token);
     navigate('/');
   };
 
+   // Signup function
+   const signup = () => {
+    navigate('/auth/login'); // Redirect to login after successful signup
+  };
+
+//Logout Function
   const logout = () => {
     clearAuthToken();
     navigate('/auth/login');
   };
 
+  //Fetch User Data when token is available
   const fetchUserData = async () => {
     if (!authToken) return;
     try {
@@ -86,6 +96,8 @@ export const AuthProvider = ({ children }) => {
         tvStat,
         login,
         logout,
+        signup,
+        setUser,
         refreshMovieStat,
         refreshTvStat,
       }}
